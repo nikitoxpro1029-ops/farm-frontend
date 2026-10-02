@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
+import { getSeedIcon } from '../seedIcons';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -156,7 +157,7 @@ function Packs({ onOpen }: PacksProps) {
             >
               {rouletteItems.map((item, i) => (
                 <div key={i} className={'roulette-item ' + item.rarity}>
-                  <div className="roulette-icon">🌰</div>
+                  
                   <div className="roulette-name">{item.name}</div>
                 </div>
               ))}
@@ -168,7 +169,7 @@ function Packs({ onOpen }: PacksProps) {
       {result && (
         <div className="pack-result-overlay" onClick={closeResult}>
           <div className={'pack-result ' + result.rarity}>
-            <div className="result-image">🌰</div>
+            <div className="result-image">{getSeedIcon(result.name)}</div>
             <h3>Вы получили:</h3>
             <p className="result-name">{result.name}</p>
             <p className="result-rarity">{result.rarity}</p>

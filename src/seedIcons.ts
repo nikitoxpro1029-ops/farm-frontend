@@ -1,0 +1,45 @@
+const ICONS: Record<string, string> = {
+  'Pshenitsa': '🌾',
+  'Morkov': '🥕',
+  'Kartofel': '🥔',
+  'Kapusta': '🥬',
+  'Ogurets': '🥒',
+  'Tomat': '🍅',
+  'Kukuruza': '🌽',
+  'Klubnika': '🍓',
+  'Baklazhan': '🍆',
+  'Tykva': '🎃',
+  'Arbuz': '🍉',
+  'Vinograd': '🍇',
+  'Zolotoe yabloko': '🍎',
+  'Zolotaya pshenitsa': '🌟',
+  'Kristalnaya tykva': '💎',
+  'Drakonye semya': '🐉'
+};
+
+const NAME_MAP: Record<string, string> = {
+  'Пшеница': 'Pshenitsa',
+  'Морковь': 'Morkov',
+  'Картофель': 'Kartofel',
+  'Капуста': 'Kapusta',
+  'Огурец': 'Ogurets',
+  'Томат': 'Tomat',
+  'Кукуруза': 'Kukuruza',
+  'Клубника': 'Klubnika',
+  'Баклажан': 'Baklazhan',
+  'Тыква': 'Tykva',
+  'Арбуз': 'Arbuz',
+  'Виноград': 'Vinograd',
+  'Золотое яблоко': 'Zolotoe yabloko',
+  'Золотая пшеница': 'Zolotaya pshenitsa',
+  'Кристальная тыква': 'Kristalnaya tykva',
+  'Драконье семя': 'Drakonye semya'
+};
+
+export const getSeedIcon = (name: string): string => {
+  const key = NAME_MAP[name];
+  if (key && ICONS[key]) {
+    return ICONS[key];
+  }
+  return '🌰';
+};

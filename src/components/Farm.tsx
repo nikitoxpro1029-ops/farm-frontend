@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import { getSeedIcon } from '../seedIcons';
 interface Crop {
   id: number;
   name: string;
@@ -48,7 +48,9 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
         {crops.map((crop) => (
           <div key={crop.id} className={'crop-card ' + crop.rarity}>
-            <div className="crop-image">{isReady(crop.ready_at) ? '🌻' : '🌱'}</div>
+            <div className="crop-image">
+  {isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}
+</div>
             <div className="crop-name">{crop.name}</div>
             <div className="crop-timer">
               {isReady(crop.ready_at) ? (
@@ -65,7 +67,7 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
       <div className="seeds-grid">
         {seeds.map((seed) => (
           <div key={seed.id} className={'seed-card ' + seed.rarity}>
-            <div className="seed-image">🌰</div>
+            <div className="seed-image">{getSeedIcon(seed.name)}</div>
             <div className="seed-name">{seed.name}</div>
             <div className="seed-qty">x{seed.quantity}</div>
             <button className="plant-btn" onClick={() => onPlant(seed.seed_type_id)}>Посадить</button>

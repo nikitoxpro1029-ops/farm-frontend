@@ -124,6 +124,7 @@ body {
   padding: 12px;
   text-align: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .roulette-item.common { border-color: #9e9e9e; }
@@ -137,14 +138,20 @@ body {
 }
 
 .roulette-icon {
-  font-size: 36px;
+  font-size: 44px;
+  line-height: 1;
 }
 
 .roulette-name {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #fff;
   line-height: 1.2;
+  padding: 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .roulette-reel.spinning .roulette-item {
