@@ -167,3 +167,43 @@ body {
   50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
   100% { transform: scale(1); }
 }
+/* Шрифты для эмодзи */
+.roulette-icon,
+.crop-image,
+.seed-image,
+.result-image {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+.roulette-icon {
+  font-size: 40px;
+  line-height: 1;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crop-image {
+  font-size: 44px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seed-image {
+  font-size: 36px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-image {
+  font-size: 64px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
