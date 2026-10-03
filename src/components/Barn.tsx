@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSeedIcon } from '../seedIcons';
+import Coin from './Coin';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -141,7 +142,7 @@ function Barn({ onSell }: BarnProps) {
           ) : (
             <>
               <div className="barn-header">
-                <span>Всего: <strong>{totalValue}💰</strong></span>
+                <span>Всего: <strong><Coin size={14} /> {totalValue}</strong></span>
                 <button className="sell-all-btn" onClick={sellAll}>
                   Продать всё
                 </button>
@@ -152,11 +153,11 @@ function Barn({ onSell }: BarnProps) {
                   <div key={item.id} className={'barn-card ' + item.rarity}><div className="barn-icon">{getSeedIcon(item.name)}</div>
                     <div className="barn-name">{item.name}</div>
                     <div className="barn-qty">x{item.quantity}</div>
-                    <div className="barn-price">💰 {item.sell_price} за шт</div>
+                    <div className="barn-price"><Coin size={12} /> {item.sell_price} за шт</div>
                     <div className="barn-actions">
                       <button onClick={() => sell(item.seed_type_id, 1)}>1</button>
                       <button onClick={() => sell(item.seed_type_id, item.quantity)}>
-                        Все ({item.sell_price * item.quantity}💰)
+                        Все ({item.sell_price * item.quantity})
                       </button>
                     </div>
                   </div>

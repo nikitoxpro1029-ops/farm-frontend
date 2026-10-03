@@ -3,6 +3,7 @@ import axios from 'axios';
 import Farm from './components/Farm';
 import Packs from './components/Packs';import Barn from './components/Barn';import Bonus from './components/Bonus';import Leaderboard from './components/Leaderboard';
 import './App.css';
+import Coin from './components/Coin';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -93,7 +94,11 @@ function App() {
     <div className="app">
       <header className="header">
         <h1>🌾 Ферма</h1>
-        {user && <div className="balance">💰 {user.balance}</div>}
+        {user && (
+  <div className="balance">
+    <Coin size={18} /> {user.balance}
+  </div>
+)}
       </header>
       <nav className="tabs"><button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button><button className={activeTab === 'bonus' ? 'active' : ''} onClick={() => setActiveTab('bonus')}>Бонус</button><button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>

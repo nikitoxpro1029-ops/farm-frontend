@@ -47,8 +47,15 @@ html, body {
 }
 .header h1 { font-size: 24px; }
 .balance {
-  background: #2d2d44; padding: 8px 16px; border-radius: 20px;
-  font-weight: bold; color: #ffd700;
+  background: #2d2d44;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
 }
 
 .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -271,12 +278,7 @@ html, body {
   flex-grow: 1;
 }
 
-.pack-price {
-  font-size: 14px;
-  font-weight: bold;
-  color: #ffd700;
-  margin-bottom: 10px;
-}
+
 
 .pack-image {
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
@@ -353,11 +355,7 @@ html, body {
   margin-bottom: 4px;
 }
 
-.barn-price {
-  font-size: 11px;
-  color: #888;
-  margin-bottom: 8px;
-}
+
 
 .barn-actions {
   display: flex;
@@ -529,11 +527,7 @@ html, body {
   font-size: 15px;
 }
 
-.craft-price {
-  color: #ffd700;
-  font-weight: bold;
-  font-size: 13px;
-}
+
 
 .craft-ingredients {
   display: flex;
@@ -666,12 +660,15 @@ html, body {
   text-overflow: ellipsis;
 }
 
+.barn-price,
+.craft-price,
+.pack-price,
 .player-balance {
-  color: #ffd700;
-  font-weight: bold;
-  font-size: 14px;
-  white-space: nowrap;
-}/* Под-вкладки внутри Амбара */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
 .subtabs {
   display: flex;
   gap: 8px;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import Coin from './Coin';
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface Player {
@@ -67,7 +67,7 @@ function Leaderboard() {
                   <div className="player-username">@{player.username}</div>
                 )}
               </div>
-              <div className="player-balance">💰 {player.balance}</div>
+              <div className="player-balance"><Coin size={12} /> {player.balance}</div>
             </div>
           );
         })}

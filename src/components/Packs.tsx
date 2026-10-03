@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { getSeedIcon } from '../seedIcons';
+import Coin from './Coin';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -146,7 +147,7 @@ function Packs({ onOpen }: PacksProps) {
                 <div className="pack-image">{pack.icon}</div>
                 <h3>{pack.name}</h3>
                 <p className="pack-desc">{pack.description}</p>
-                <div className="pack-price">💰 {pack.price}</div>
+                <div className="pack-price"><Coin size={14} /> {pack.price}</div>
                 <button
                   onClick={function() { openPack(pack.id); }}
                   disabled={opening}
