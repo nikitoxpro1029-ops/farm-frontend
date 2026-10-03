@@ -23,9 +23,11 @@ interface FarmProps {
   seeds: Seed[];
   onPlant: (seedTypeId: number) => void;
   onHarvest: (cropId: number) => void;
+  plotsInfo: { plots: number; maxAllowed: number; canBuy: boolean; nextPrice: number; planted: number } | null;
+  onBuyPlot: () => void;
 }
 
-function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
+function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmProps) {
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
 
@@ -81,6 +83,20 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
 
   return (
     <div className="farm">
+      {plotsInfo && (
+        <div className="plots-header">
+          <div className="plots-info">
+            <span className="plots-count">🌱 {plotsInfo.planted}/{plotsInfo.plots}</span>
+            <span className="plots-label">грядок занято</span>
+          </div>
+          {plotsInfo.canBuy && (
+            <button className="buy-plot-btn" onClick={onBuyPlot}>
+              + Грядка<br />
+              <span className="buy-plot-price">{plotsInfo.nextPrice}💰</span>
+            </button>
+          )}
+        </div>
+      )}
       <h2>Грядки</h2>
       <div className="crops-grid">
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
