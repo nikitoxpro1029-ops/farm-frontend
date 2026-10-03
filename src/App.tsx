@@ -122,11 +122,21 @@ function App() {
         { cropId, score },
         { headers: { 'x-telegram-init-data': initData } }
       );
-      tg?.showAlert(
-        '💧 Полив успешен!\n' +
+
+      let message = '💧 Полив успешен!\n' +
         'Вода: ' + res.data.waterLevel + '%\n' +
-        'Качество: ' + res.data.quality + '/100'
-      );
+        'Качество: ' + res.data.quality + '/100';
+
+      if (res.data.bonusQuality > 0) {
+        message += '\n\n🔥 БОНУС ЗА СЕРИЮ: +10 к качеству!';
+        tg?.HapticFeedback?.notificationOccurred('success');
+      } else {const left = 3 - (res.data.waterStreak || 0);
+        if (left > 0 && left < 3) {
+          message += '\n\n🔥 До бонуса: ещё ' + left + ' полив(а)';
+        }
+      }
+
+      tg?.showAlert(message);
       loadState();
     } catch (error: any) {
       tg?.showAlert(error.response?.data?.error || 'Ошибка');
@@ -134,7 +144,8 @@ function App() {
   };
 
   return (
-    <div className="app"><header className="header">
+    <div className="app">
+      <header className="header">
         <h1>🌾 Ферма</h1>
         {user && (
           <div className="balance">

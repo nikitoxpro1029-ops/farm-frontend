@@ -72,6 +72,8 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
     return diff > 0 && diff < 2 * 60 * 60 * 1000;
   };
 
+  const isThirsty = (waterLevel: number) => waterLevel < 20;
+
   const getProgress = (plantedAt: string, readyAt: string) => {
     const plantedTime = new Date(plantedAt).getTime();
     const readyTime = new Date(readyAt).getTime();
@@ -120,8 +122,8 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
             {harvestingId === crop.id && (
               <div className="harvest-effect">
                 <span className="coin-fly coin-1">🪙</span>
-                <span className="coin-fly coin-2">🪙</span>
-                <span className="coin-fly coin-3">🪙</span><span className="coin-fly coin-4">🪙</span>
+                <span className="coin-fly coin-2">🪙</span><span className="coin-fly coin-3">🪙</span>
+                <span className="coin-fly coin-4">🪙</span>
                 <span className="coin-fly coin-5">🪙</span>
               </div>
             )}
@@ -133,9 +135,16 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
 
             <div className="crop-water-bar">
               <div
-                className={'crop-water-fill' + (crop.water_level < 30 ? ' low' : '')}
-                style={{ width: crop.water_level + '%' }}
+                className={
+                  'crop-water-fill' +
+                  (crop.water_level < 30 ? ' low' : '') +
+                  (isThirsty(crop.water_level) ? ' thirsty' : '')
+                }
+                style={{ width: Math.max(crop.water_level, 4) + '%' }}
               />
+              {isThirsty(crop.water_level) && (
+                <span className="crop-water-warning">⚠️</span>
+              )}
             </div>
             <div className="crop-quality">⭐️ {crop.quality}/100</div>
 

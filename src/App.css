@@ -1086,4 +1086,32 @@ html, body {
   border: none;
   font-size: 13px;
   cursor: pointer;
+}/* Индикатор жажды */
+.crop-water-bar {
+  position: relative;
+}
+
+.crop-water-fill.thirsty {
+  background: linear-gradient(90deg, #d32f2f, #f44336);
+  animation: thirsty-blink 0.8s infinite;
+}
+
+@keyframes thirsty-blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #f44336; }
+  50% { opacity: 0.6; box-shadow: 0 0 12px #f44336; }
+}
+
+.crop-water-warning {
+  position: absolute;
+  right: -4px;
+  top: -8px;
+  font-size: 14px;
+  animation: warning-shake 0.5s infinite;
+  z-index: 5;
+}
+
+@keyframes warning-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
 }
