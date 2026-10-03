@@ -474,4 +474,99 @@ html, body {
 @keyframes bonus-pulse {
   0%, 100% { box-shadow: 0 0 12px rgba(255, 215, 0, 0.5); }
   50% { box-shadow: 0 0 24px rgba(255, 215, 0, 0.9); }
+}/* Крафт */
+.craft-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.craft-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.craft-card {
+  background: #2d2d44;
+  border-radius: 16px;
+  padding: 14px;
+  border: 2px solid #9c27b0;
+}
+
+.craft-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #3a3a55;
+}
+
+.craft-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.craft-name {
+  flex: 1;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.craft-price {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.craft-ingredients {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.craft-ing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1a1a2e;
+  font-size: 12px;
+}
+
+.craft-ing.ok { border-left: 3px solid #4caf50; }
+.craft-ing.miss { border-left: 3px solid #e91e63; }
+
+.craft-ing-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 20px;
+}
+
+.craft-ing-name { flex: 1; }
+.craft-ing-count { font-weight: bold; }
+
+.craft-ing.ok .craft-ing-count { color: #4caf50; }
+.craft-ing.miss .craft-ing-count { color: #e91e63; }
+
+.craft-btn {
+  width: 100%;
+  padding: 12px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.craft-btn:disabled {
+  background: #555;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
