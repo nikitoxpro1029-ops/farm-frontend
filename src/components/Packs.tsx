@@ -9,6 +9,8 @@ interface Pack {
   name: string;
   price: number;
   description: string;
+  icon: string;
+  rarity: string;
 }
 
 interface SeedResult {
@@ -40,9 +42,9 @@ function Packs({ onOpen }: PacksProps) {
   const tg = (window as any).Telegram?.WebApp;
 
   const packs: Pack[] = [
-    { id: 1, name: 'Базовый пак', price: 50, description: 'Случайное семя' },
-    { id: 2, name: 'Редкий пак', price: 150, description: 'Шанс на редкие семена' },
-    { id: 3, name: 'Легендарный пак', price: 500, description: 'Эпические семена' },
+    { id: 1, name: 'Базовый пак', price: 50, description: 'Обычные семена', icon: '📦', rarity: 'common' },
+    { id: 2, name: 'Редкий пак', price: 150, description: 'Шанс на редкие', icon: '🎁', rarity: 'rare' },
+    { id: 3, name: 'Легендарный пак', price: 500, description: 'Эпик и мифик', icon: '💎', rarity: 'legendary' },
   ];
 
   const allSeeds: RouletteItem[] = [
@@ -128,19 +130,24 @@ function Packs({ onOpen }: PacksProps) {
 
       {rouletteItems.length === 0 && (
         <div className="packs-grid">
-          {packs.map((pack) => (
-            <div key={pack.id} className="pack-card">
-              <div className="pack-image">🎁</div>
-              <h3>{pack.name}</h3>
-              <p>{pack.description}</p>
-              <div className="pack-price">💰 {pack.price}</div>
-              <button onClick={() => openPack(pack.id)} disabled={opening}>
-                {opening ? 'Открываем...' : 'Купить'}
-              </button>
-            </div>
-          ))}
+          {packs.map(function(pack) {
+            return (
+              <div key={pack.id} className={'pack-card ' + pack.rarity}>
+                <div className="pack-image">{pack.icon}</div>
+                <h3>{pack.name}</h3>
+                <p className="pack-desc">{pack.description}</p>
+                <div className="pack-price">💰 {pack.price}</div>
+                <button
+                  onClick={function() { openPack(pack.id); }}
+                  disabled={opening}
+                >
+                  {opening ? 'Открываем...' : 'Купить'}
+                </button>
+              </div>
+            );
+          })}
         </div>
-)}
+      )}
 
       {rouletteItems.length > 0 && (
         <div className="roulette-wrapper">
