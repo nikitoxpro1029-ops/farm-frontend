@@ -569,4 +569,93 @@ html, body {
   background: #555;
   opacity: 0.6;
   cursor: not-allowed;
+}/* Лидерборд */
+.leaderboard-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #2d2d44;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+}
+
+.leaderboard-row.top-1 {
+  border-color: #ffd700;
+  background: linear-gradient(135deg, #3a2e0e, #2d2d44);
+}
+
+.leaderboard-row.top-2 {
+  border-color: #c0c0c0;
+  background: linear-gradient(135deg, #2e2e2e, #2d2d44);
+}
+
+.leaderboard-row.top-3 {
+  border-color: #cd7f32;
+  background: linear-gradient(135deg, #3a2414, #2d2d44);
+}
+
+.leaderboard-row.me {
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+}
+
+.rank {
+  min-width: 42px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #888;
+}
+
+.rank .medal {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 24px;
+}
+
+.player-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.me-badge {
+  color: #4caf50;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.player-username {
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-balance {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
 }
