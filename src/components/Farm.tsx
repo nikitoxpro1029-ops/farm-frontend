@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getSeedIcon } from '../seedIcons';
+
 interface Crop {
   id: number;
   name: string;
   rarity: string;
   ready_at: string;
+  expires_at: string | null;
 }
 
 interface Seed {
@@ -39,6 +41,21 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
     return mins + ':' + secsStr;
   };
 
+  const getExpireTime = (expiresAt: string | null) => {
+    if (!expiresAt) return '';
+    const diff = new Date(expiresAt).getTime() - now;
+    if (diff <= 0) return 'Завял';
+    const hours = Math.floor(diff / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    return hours + 'ч ' + mins + 'м';
+  };
+
+  const isUrgent = (expiresAt: string | null) => {
+    if (!expiresAt) return false;
+    const diff = new Date(expiresAt).getTime() - now;
+    return diff > 0 && diff < 2 * 60 * 60 * 1000;
+  };
+
   const isReady = (readyAt: string) => new Date(readyAt).getTime() <= now;
 
   return (
@@ -48,13 +65,16 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
         {crops.map((crop) => (
           <div key={crop.id} className={'crop-card ' + crop.rarity}>
-            <div className="crop-image">
-  {isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}
-</div>
+            <div className="crop-image">{isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}</div>
             <div className="crop-name">{crop.name}</div>
             <div className="crop-timer">
               {isReady(crop.ready_at) ? (
-                <button className="harvest-btn" onClick={() => onHarvest(crop.id)}>Собрать</button>
+                <>
+                  <button className="harvest-btn" onClick={() => onHarvest(crop.id)}>Собрать</button>
+                  <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
+                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
+                  </div>
+                </>
               ) : (
                 <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
               )}

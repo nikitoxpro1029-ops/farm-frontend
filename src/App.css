@@ -692,4 +692,19 @@ html, body {
 .subtabs button.active {
   background: #4caf50;
   font-weight: bold;
+}.crop-expire {
+  font-size: 10px;
+  color: #ff9800;
+  margin-top: 6px;
+  font-weight: bold;
+}
+
+.crop-expire.urgent {
+  color: #e91e63;
+  animation: urgent-blink 1s infinite;
+}
+
+@keyframes urgent-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
