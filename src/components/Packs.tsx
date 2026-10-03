@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { getSeedIcon } from '../seedIcons';
 
@@ -38,7 +38,17 @@ function Packs({ onOpen }: PacksProps) {
   const [rouletteItems, setRouletteItems] = useState<RouletteItem[]>([]);
   const [spinning, setSpinning] = useState(false);
   const [offset, setOffset] = useState(0);
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);useEffect(() => {
+  const el = viewportRef.current;
+  if (!el) return;
+  const blockTouch = (e: TouchEvent) => {
+    e.preventDefault();
+  };
+  el.addEventListener('touchmove', blockTouch, { passive: false });
+  return () => {
+    el.removeEventListener('touchmove', blockTouch);
+  };
+}, [rouletteItems.length]);
   const tg = (window as any).Telegram?.WebApp;
 
   const packs: Pack[] = [
