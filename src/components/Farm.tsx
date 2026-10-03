@@ -26,8 +26,8 @@ interface FarmProps {
 }
 
 function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
-  const [now, setNow] = useState(Date.now());const [harvestingId, setHarvestingId] = useState<number | null>(null);
-const [plantedId, setPlantedId] = useState<number | null>(null);
+  const [now, setNow] = useState(Date.now());
+  const [harvestingId, setHarvestingId] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -40,7 +40,7 @@ const [plantedId, setPlantedId] = useState<number | null>(null);
     const totalMins = Math.floor(diff / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
     const secsStr = secs < 10 ? '0' + secs : '' + secs;
-    
+
     if (totalMins < 60) {
       return totalMins + ':' + secsStr;
     }
@@ -57,7 +57,15 @@ const [plantedId, setPlantedId] = useState<number | null>(null);
     const hours = Math.floor(diff / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     return hours + 'ч ' + mins + 'м';
-  };const getProgress = (plantedAt: string, readyAt: string) => {
+  };
+
+  const isUrgent = (expiresAt: string | null) => {
+    if (!expiresAt) return false;
+    const diff = new Date(expiresAt).getTime() - now;
+    return diff > 0 && diff < 2 * 60 * 60 * 1000;
+  };
+
+  const getProgress = (plantedAt: string, readyAt: string) => {
     const plantedTime = new Date(plantedAt).getTime();
     const readyTime = new Date(readyAt).getTime();
     const total = readyTime - plantedTime;
@@ -69,12 +77,6 @@ const [plantedId, setPlantedId] = useState<number | null>(null);
     return Math.floor(percent);
   };
 
-  const isUrgent = (expiresAt: string | null) => {
-    if (!expiresAt) return false;
-    const diff = new Date(expiresAt).getTime() - now;
-    return diff > 0 && diff < 2 * 60 * 60 * 1000;
-  };
-
   const isReady = (readyAt: string) => new Date(readyAt).getTime() <= now;
 
   return (
@@ -84,55 +86,61 @@ const [plantedId, setPlantedId] = useState<number | null>(null);
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
         {crops.map((crop) => (
           <div
-  key={crop.id}
-  className={
-    'crop-card ' + crop.rarity +
-    (isReady(crop.ready_at) ? ' ready' : '') +
-    (harvestingId === crop.id ? ' harvesting' : '')
-  }
->{harvestingId === crop.id && (
-  <div className="harvest-effect">
-    <span className="coin-fly coin-1">🪙</span>
-    <span className="coin-fly coin-2">🪙</span>
-    <span className="coin-fly coin-3">🪙</span>
-    <span className="coin-fly coin-4">🪙</span>
-    <span className="coin-fly coin-5">🪙</span>
-  </div>
-)}
-            <div className="crop-image">{isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}</div>
+            key={crop.id}
+            className={
+              'crop-card ' + crop.rarity +
+              (isReady(crop.ready_at) ? ' ready' : '') +
+              (harvestingId === crop.id ? ' harvesting' : '')
+            }
+          >
+            {harvestingId === crop.id && (
+              <div className="harvest-effect">
+                <span className="coin-fly coin-1">🪙</span>
+                <span className="coin-fly coin-2">🪙</span>
+                <span className="coin-fly coin-3">🪙</span>
+                <span className="coin-fly coin-4">🪙</span>
+                <span className="coin-fly coin-5">🪙</span>
+              </div>
+            )}
+
+            <div className="crop-image">
+              {isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}
+            </div>
             <div className="crop-name">{crop.name}</div>
             <div className="crop-timer">
-  {isReady(crop.ready_at) ? (
-    <>
-      <button
-  className="harvest-btn"
-  onClick={() => {
-    setHarvestingId(crop.id);
-    onHarvest(crop.id);
-    setTimeout(() => setHarvestingId(null), 1200);
-  }}
->
-  Собрать
-</button>
-      <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
-        {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
-      </div>
-    </>
-  ) : (
-    <>
-      <div className="crop-progress-bar">
-        <div
-          className="crop-progress-fill"
-          style={{ width: getProgress(crop.planted_at, crop.ready_at) + '%' }}
-        />
-      </div>
-      <div className="crop-progress-text">
-        <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
-        <span className="crop-progress-percent">{getProgress(crop.planted_at, crop.ready_at)}%</span>
-      </div>
-    </>
-  )}
-</div>
+              {isReady(crop.ready_at) ? (
+                <>
+                  <button
+                    className="harvest-btn"
+                    onClick={() => {
+                      setHarvestingId(crop.id);
+                      onHarvest(crop.id);
+                      setTimeout(() => setHarvestingId(null), 1200);
+                    }}
+                  >
+                    Собрать
+                  </button>
+                  <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
+                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="crop-progress-bar">
+                    <div
+                      className="crop-progress-fill"
+                      style={{ width: getProgress(crop.planted_at, crop.ready_at) + '%' }}
+                    />
+                  </div>
+                  <div className="crop-progress-text">
+                    <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
+                    <span className="crop-progress-percent">
+                      {getProgress(crop.planted_at, crop.ready_at)}%
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>
