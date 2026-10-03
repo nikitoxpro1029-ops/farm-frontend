@@ -5,6 +5,7 @@ interface Crop {
   id: number;
   name: string;
   rarity: string;
+  planted_at: string;
   ready_at: string;
   expires_at: string | null;
 }
@@ -55,6 +56,16 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
     const hours = Math.floor(diff / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     return hours + 'ч ' + mins + 'м';
+  };const getProgress = (plantedAt: string, readyAt: string) => {
+    const plantedTime = new Date(plantedAt).getTime();
+    const readyTime = new Date(readyAt).getTime();
+    const total = readyTime - plantedTime;
+    if (total <= 0) return 100;
+    const passed = now - plantedTime;
+    const percent = (passed / total) * 100;
+    if (percent < 0) return 0;
+    if (percent > 100) return 100;
+    return Math.floor(percent);
   };
 
   const isUrgent = (expiresAt: string | null) => {
@@ -75,17 +86,28 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
             <div className="crop-image">{isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}</div>
             <div className="crop-name">{crop.name}</div>
             <div className="crop-timer">
-              {isReady(crop.ready_at) ? (
-                <>
-                  <button className="harvest-btn" onClick={() => onHarvest(crop.id)}>Собрать</button>
-                  <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
-                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
-                  </div>
-                </>
-              ) : (
-                <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
-              )}
-            </div>
+  {isReady(crop.ready_at) ? (
+    <>
+      <button className="harvest-btn" onClick={() => onHarvest(crop.id)}>Собрать</button>
+      <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
+        {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="crop-progress-bar">
+        <div
+          className="crop-progress-fill"
+          style={{ width: getProgress(crop.planted_at, crop.ready_at) + '%' }}
+        />
+      </div>
+      <div className="crop-progress-text">
+        <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
+        <span className="crop-progress-percent">{getProgress(crop.planted_at, crop.ready_at)}%</span>
+      </div>
+    </>
+  )}
+</div>
           </div>
         ))}
       </div>
