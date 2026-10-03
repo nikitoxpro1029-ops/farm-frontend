@@ -15,6 +15,7 @@ function App() {
   const [crops, setCrops] = useState([]);
   const [seeds, setSeeds] = useState([]);
   const [plotsInfo, setPlotsInfo] = useState<any>(null);
+  const [autowater, setAutowater] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('farm');
 
   const tg = (window as any).Telegram?.WebApp;
@@ -61,6 +62,7 @@ function App() {
       setUser(res.data.user);
       setCrops(res.data.crops);
       setSeeds(res.data.seeds);
+      setAutowater(res.data.autowater);
 
       const plotsRes = await axios.get(API_URL + '/api/farm/plots', { headers });
       setPlotsInfo(plotsRes.data);
@@ -127,16 +129,49 @@ function App() {
         'Вода: ' + res.data.waterLevel + '%\n' +
         'Качество: ' + res.data.quality + '/100';
 
-      if (res.data.bonusQuality > 0) {
-        message += '\n\n🔥 БОНУС ЗА СЕРИЮ: +10 к качеству!';
+      if (res.data.bonusQuality > 0) {message += '\n\n🔥 БОНУС ЗА СЕРИЮ: +10 к качеству!';
         tg?.HapticFeedback?.notificationOccurred('success');
-      } else {const left = 3 - (res.data.waterStreak || 0);
+      } else {
+        const left = 3 - (res.data.waterStreak || 0);
         if (left > 0 && left < 3) {
           message += '\n\n🔥 До бонуса: ещё ' + left + ' полив(а)';
         }
       }
 
       tg?.showAlert(message);
+      loadState();
+    } catch (error: any) {
+      tg?.showAlert(error.response?.data?.error || 'Ошибка');
+    }
+  };
+
+  const fertilize = async (cropId: number) => {
+    try {
+      const initData = tg?.initData || '';
+      const res = await axios.post(
+        API_URL + '/api/farm/fertilize',
+        { cropId },
+        { headers: { 'x-telegram-init-data': initData } }
+      );
+      const savedMin = Math.floor(res.data.savedMs / 60000);
+      tg?.showAlert('⚡️ Ускорено!\nСэкономлено времени: ' + savedMin + ' мин');
+      tg?.HapticFeedback?.notificationOccurred('success');
+      loadState();
+    } catch (error: any) {
+      tg?.showAlert(error.response?.data?.error || 'Ошибка');
+    }
+  };
+
+  const buyAutowater = async () => {
+    try {
+      const initData = tg?.initData || '';
+      await axios.post(
+        API_URL + '/api/farm/buy-autowater',
+        {},
+        { headers: { 'x-telegram-init-data': initData } }
+      );
+      tg?.showAlert('💧 Автополив активен на 24 часа!');
+      tg?.HapticFeedback?.notificationOccurred('success');
       loadState();
     } catch (error: any) {
       tg?.showAlert(error.response?.data?.error || 'Ошибка');
@@ -170,8 +205,11 @@ function App() {
             onPlant={plantSeed}
             onHarvest={harvestCrop}
             onWater={waterCrop}
+            onFertilize={fertilize}
             plotsInfo={plotsInfo}
             onBuyPlot={buyPlot}
+            autowater={autowater}
+            onBuyAutowater={buyAutowater}
           />
         )}
         {activeTab === 'packs' && <Packs onOpen={loadState} />}

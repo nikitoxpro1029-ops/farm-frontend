@@ -1114,4 +1114,62 @@ html, body {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-3px); }
   75% { transform: translateX(3px); }
+}/* Удобрения */
+.fertilize-btn {
+  background: linear-gradient(135deg, #9c27b0, #e91e63);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 6px 0;
+  width: 100%;
+}
+
+.fertilize-btn:active {
+  transform: scale(0.96);
+}
+
+.fertilized-badge {
+  background: linear-gradient(135deg, #9c27b0, #e91e63);
+  color: #fff;
+  font-size: 11px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin: 6px 0;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(233, 30, 99, 0.5);
+}
+
+/* Автополив */
+.autowater-banner {
+  background: linear-gradient(135deg, #03a9f4, #0288d1);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  box-shadow: 0 0 15px rgba(3, 169, 244, 0.4);
+}
+
+.buy-autowater-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #03a9f4, #4fc3f7);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.buy-autowater-btn:active {
+  transform: scale(0.98);
 }

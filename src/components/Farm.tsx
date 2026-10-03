@@ -11,6 +11,8 @@ interface Crop {
   expires_at: string | null;
   water_level: number;
   quality: number;
+  water_streak: number;
+  fertilized: boolean;
 }
 
 interface Seed {
@@ -27,11 +29,25 @@ interface FarmProps {
   onPlant: (seedTypeId: number) => void;
   onHarvest: (cropId: number) => void;
   onWater: (cropId: number, score: number) => void;
+  onFertilize: (cropId: number) => void;
   plotsInfo: { plots: number; maxAllowed: number; canBuy: boolean; nextPrice: number; planted: number } | null;
   onBuyPlot: () => void;
+  autowater: { active: boolean; until: string | null } | null;
+  onBuyAutowater: () => void;
 }
 
-function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot }: FarmProps) {
+function Farm({
+  crops,
+  seeds,
+  onPlant,
+  onHarvest,
+  onWater,
+  onFertilize,
+  plotsInfo,
+  onBuyPlot,
+  autowater,
+  onBuyAutowater,
+}: FarmProps) {
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
   const [wateringCropId, setWateringCropId] = useState<number | null>(null);
@@ -107,6 +123,21 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
         </div>
       )}
 
+      {autowater && autowater.active && autowater.until && (
+        <div className="autowater-banner">
+          💧 Автополив активен до{' '}
+          {new Date(autowater.until).toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </div>
+      )}
+
+      {(!autowater || !autowater.active) && (<button className="buy-autowater-btn" onClick={onBuyAutowater}>
+          💧 Купить автополив на 24ч — 500💰
+        </button>
+      )}
+
       <h2>Грядки</h2>
       <div className="crops-grid">
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
@@ -114,7 +145,8 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
           <div
             key={crop.id}
             className={
-              'crop-card ' + crop.rarity +
+              'crop-card ' +
+              crop.rarity +
               (isReady(crop.ready_at) ? ' ready' : '') +
               (harvestingId === crop.id ? ' harvesting' : '')
             }
@@ -122,7 +154,8 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
             {harvestingId === crop.id && (
               <div className="harvest-effect">
                 <span className="coin-fly coin-1">🪙</span>
-                <span className="coin-fly coin-2">🪙</span><span className="coin-fly coin-3">🪙</span>
+                <span className="coin-fly coin-2">🪙</span>
+                <span className="coin-fly coin-3">🪙</span>
                 <span className="coin-fly coin-4">🪙</span>
                 <span className="coin-fly coin-5">🪙</span>
               </div>
@@ -146,7 +179,12 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
                 <span className="crop-water-warning">⚠️</span>
               )}
             </div>
+
             <div className="crop-quality">⭐️ {crop.quality}/100</div>
+
+            {!isReady(crop.ready_at) && (crop.water_streak || 0) > 0 && (
+              <div className="crop-streak">🔥 {crop.water_streak}/3</div>
+            )}
 
             {!isReady(crop.ready_at) && crop.water_level < 100 && (
               <button
@@ -155,6 +193,19 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
               >
                 💧 Полить
               </button>
+            )}
+
+            {!isReady(crop.ready_at) && !crop.fertilized && (
+              <button
+                className="fertilize-btn"
+                onClick={() => onFertilize(crop.id)}
+              >
+                ⚡️ Ускорить 100💰
+              </button>
+            )}
+
+            {!isReady(crop.ready_at) && crop.fertilized && (
+              <div className="fertilized-badge">⚡️ Удобрено</div>
             )}
 
             <div className="crop-timer">
@@ -170,8 +221,13 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
                   >
                     Собрать
                   </button>
-                  <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
-                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
+                  <div
+                    className={
+                      'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')
+                    }
+                  >
+                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось:{' '}
+                    {getExpireTime(crop.expires_at)}
                   </div>
                 </>
               ) : (
@@ -179,15 +235,16 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
                   <div className="crop-progress-bar">
                     <div
                       className="crop-progress-fill"
-                      style={{ width: getProgress(crop.planted_at, crop.ready_at) + '%' }}
+                      style={{
+                        width: getProgress(crop.planted_at, crop.ready_at) + '%',
+                      }}
                     />
                   </div>
                   <div className="crop-progress-text">
                     <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
                     <span className="crop-progress-percent">
                       {getProgress(crop.planted_at, crop.ready_at)}%
-                    </span>
-                  </div>
+                    </span></div>
                 </>
               )}
             </div>
@@ -202,7 +259,12 @@ function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot 
             <div className="seed-image">{getSeedIcon(seed.name)}</div>
             <div className="seed-name">{seed.name}</div>
             <div className="seed-qty">x{seed.quantity}</div>
-            <button className="plant-btn" onClick={() => onPlant(seed.seed_type_id)}>Посадить</button>
+            <button
+              className="plant-btn"
+              onClick={() => onPlant(seed.seed_type_id)}
+            >
+              Посадить
+            </button>
           </div>
         ))}
       </div>
