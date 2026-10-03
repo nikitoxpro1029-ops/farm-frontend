@@ -114,9 +114,27 @@ function App() {
     }
   };
 
+  const waterCrop = async (cropId: number, score: number) => {
+    try {
+      const initData = tg?.initData || '';
+      const res = await axios.post(
+        API_URL + '/api/farm/water',
+        { cropId, score },
+        { headers: { 'x-telegram-init-data': initData } }
+      );
+      tg?.showAlert(
+        '💧 Полив успешен!\n' +
+        'Вода: ' + res.data.waterLevel + '%\n' +
+        'Качество: ' + res.data.quality + '/100'
+      );
+      loadState();
+    } catch (error: any) {
+      tg?.showAlert(error.response?.data?.error || 'Ошибка');
+    }
+  };
+
   return (
-    <div className="app">
-      <header className="header">
+    <div className="app"><header className="header">
         <h1>🌾 Ферма</h1>
         {user && (
           <div className="balance">
@@ -127,7 +145,8 @@ function App() {
 
       <nav className="tabs">
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
-        <button className={activeTab === 'bonus' ? 'active' : ''} onClick={() => setActiveTab('bonus')}>Бонус</button><button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
+        <button className={activeTab === 'bonus' ? 'active' : ''} onClick={() => setActiveTab('bonus')}>Бонус</button>
+        <button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
         <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>Паки</button>
       </nav>
@@ -139,6 +158,7 @@ function App() {
             seeds={seeds}
             onPlant={plantSeed}
             onHarvest={harvestCrop}
+            onWater={waterCrop}
             plotsInfo={plotsInfo}
             onBuyPlot={buyPlot}
           />
@@ -152,4 +172,3 @@ function App() {
   );
 }
 
-export default App;

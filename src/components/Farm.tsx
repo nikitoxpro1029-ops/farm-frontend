@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getSeedIcon } from '../seedIcons';
+import WaterGame from './WaterGame';
 
 interface Crop {
   id: number;
@@ -8,6 +9,8 @@ interface Crop {
   planted_at: string;
   ready_at: string;
   expires_at: string | null;
+  water_level: number;
+  quality: number;
 }
 
 interface Seed {
@@ -23,13 +26,15 @@ interface FarmProps {
   seeds: Seed[];
   onPlant: (seedTypeId: number) => void;
   onHarvest: (cropId: number) => void;
+  onWater: (cropId: number, score: number) => void;
   plotsInfo: { plots: number; maxAllowed: number; canBuy: boolean; nextPrice: number; planted: number } | null;
   onBuyPlot: () => void;
 }
 
-function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmProps) {
+function Farm({ crops, seeds, onPlant, onHarvest, onWater, plotsInfo, onBuyPlot }: FarmProps) {
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
+  const [wateringCropId, setWateringCropId] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -86,7 +91,9 @@ function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmPr
       {plotsInfo && (
         <div className="plots-header">
           <div className="plots-info">
-            <span className="plots-count">🌱 {plotsInfo.planted}/{plotsInfo.plots}</span>
+            <span className="plots-count">
+              🌱 {plotsInfo.planted}/{Math.max(plotsInfo.plots, plotsInfo.planted)}
+            </span>
             <span className="plots-label">грядок занято</span>
           </div>
           {plotsInfo.canBuy && (
@@ -97,6 +104,7 @@ function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmPr
           )}
         </div>
       )}
+
       <h2>Грядки</h2>
       <div className="crops-grid">
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
@@ -113,8 +121,7 @@ function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmPr
               <div className="harvest-effect">
                 <span className="coin-fly coin-1">🪙</span>
                 <span className="coin-fly coin-2">🪙</span>
-                <span className="coin-fly coin-3">🪙</span>
-                <span className="coin-fly coin-4">🪙</span>
+                <span className="coin-fly coin-3">🪙</span><span className="coin-fly coin-4">🪙</span>
                 <span className="coin-fly coin-5">🪙</span>
               </div>
             )}
@@ -123,6 +130,24 @@ function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmPr
               {isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}
             </div>
             <div className="crop-name">{crop.name}</div>
+
+            <div className="crop-water-bar">
+              <div
+                className={'crop-water-fill' + (crop.water_level < 30 ? ' low' : '')}
+                style={{ width: crop.water_level + '%' }}
+              />
+            </div>
+            <div className="crop-quality">⭐️ {crop.quality}/100</div>
+
+            {!isReady(crop.ready_at) && crop.water_level < 100 && (
+              <button
+                className="water-btn"
+                onClick={() => setWateringCropId(crop.id)}
+              >
+                💧 Полить
+              </button>
+            )}
+
             <div className="crop-timer">
               {isReady(crop.ready_at) ? (
                 <>
@@ -172,6 +197,16 @@ function Farm({ crops, seeds, onPlant, onHarvest, plotsInfo, onBuyPlot }: FarmPr
           </div>
         ))}
       </div>
+
+      {wateringCropId !== null && (
+        <WaterGame
+          onFinish={(score) => {
+            onWater(wateringCropId, score);
+            setWateringCropId(null);
+          }}
+          onCancel={() => setWateringCropId(null)}
+        />
+      )}
     </div>
   );
 }
