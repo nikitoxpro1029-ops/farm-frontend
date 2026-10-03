@@ -26,7 +26,8 @@ interface FarmProps {
 }
 
 function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(Date.now());const [harvestingId, setHarvestingId] = useState<number | null>(null);
+const [plantedId, setPlantedId] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -82,13 +83,37 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
       <div className="crops-grid">
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
         {crops.map((crop) => (
-          <div key={crop.id} className={'crop-card ' + crop.rarity}>
+          <div
+  key={crop.id}
+  className={
+    'crop-card ' + crop.rarity +
+    (isReady(crop.ready_at) ? ' ready' : '') +
+    (harvestingId === crop.id ? ' harvesting' : '')
+  }
+>{harvestingId === crop.id && (
+  <div className="harvest-effect">
+    <span className="coin-fly coin-1">🪙</span>
+    <span className="coin-fly coin-2">🪙</span>
+    <span className="coin-fly coin-3">🪙</span>
+    <span className="coin-fly coin-4">🪙</span>
+    <span className="coin-fly coin-5">🪙</span>
+  </div>
+)}
             <div className="crop-image">{isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}</div>
             <div className="crop-name">{crop.name}</div>
             <div className="crop-timer">
   {isReady(crop.ready_at) ? (
     <>
-      <button className="harvest-btn" onClick={() => onHarvest(crop.id)}>Собрать</button>
+      <button
+  className="harvest-btn"
+  onClick={() => {
+    setHarvestingId(crop.id);
+    onHarvest(crop.id);
+    setTimeout(() => setHarvestingId(null), 1200);
+  }}
+>
+  Собрать
+</button>
       <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
         {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.expires_at)}
       </div>

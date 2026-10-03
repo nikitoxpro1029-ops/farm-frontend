@@ -755,4 +755,103 @@ html, body {
   color: #8bc34a;
   font-weight: bold;
   font-size: 11px;
+}/* Анимации грядок */
+.crop-card {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.crop-card.ready {
+  animation: crop-ready-pulse 2s ease-in-out infinite;
+}
+
+@keyframes crop-ready-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(76, 175, 80, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(139, 195, 74, 0.6);
+  }
+}
+
+.crop-card.harvesting {
+  animation: card-shake 0.5s ease-out;
+}
+
+@keyframes card-shake {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.05); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.harvest-effect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+.coin-fly {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 24px;
+  transform: translate(-50%, -50%);
+  animation: coin-fly-up 1.2s ease-out forwards;
+  filter: drop-shadow(0 0 6px #ffd700);
+}
+
+.coin-1 { animation-delay: 0s; margin-left: -30px; }
+.coin-2 { animation-delay: 0.1s; margin-left: -10px; }
+.coin-3 { animation-delay: 0.2s; margin-left: 10px; }
+.coin-4 { animation-delay: 0.3s; margin-left: 30px; }
+.coin-5 { animation-delay: 0.4s; margin-left: 0; }
+
+@keyframes coin-fly-up {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -150px) scale(0.8);
+  }
+}
+
+/* Плавное появление ростка при посадке */
+.crop-image {
+  animation: seed-pop 0.5s ease-out;
+}
+
+@keyframes seed-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.harvest-btn {
+  animation: harvest-btn-glow 2s ease-in-out infinite;
+}
+
+@keyframes harvest-btn-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 152, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(255, 152, 0, 0.9);
+  }
 }
