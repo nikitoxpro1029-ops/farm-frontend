@@ -35,10 +35,17 @@ function Farm({ crops, seeds, onPlant, onHarvest }: FarmProps) {
   const getTimeLeft = (readyAt: string) => {
     const diff = new Date(readyAt).getTime() - now;
     if (diff <= 0) return 'Готово!';
-    const mins = Math.floor(diff / 60000);
+    const totalMins = Math.floor(diff / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
     const secsStr = secs < 10 ? '0' + secs : '' + secs;
-    return mins + ':' + secsStr;
+    
+    if (totalMins < 60) {
+      return totalMins + ':' + secsStr;
+    }
+    const hours = Math.floor(totalMins / 60);
+    const mins = totalMins % 60;
+    const minsStr = mins < 10 ? '0' + mins : '' + mins;
+    return hours + 'ч ' + minsStr + 'м';
   };
 
   const getExpireTime = (expiresAt: string | null) => {
