@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const REWARDS = [0, 50, 75, 100, 150, 200, 300, 500];
+const REWARDS = [0, 30, 50, 75, 100, 150, 200, 400];
 
 interface BonusStatus {
   streak: number;
