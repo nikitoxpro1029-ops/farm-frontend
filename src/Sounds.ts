@@ -71,38 +71,73 @@ export function isMusicEnabled() {
 
 export function isSfxEnabled() {
   return sfxEnabled;
-}export function playRouletteSpin(totalDuration = 4200) {
+}
+
+// ============ РУЛЕТКА CS:GO СТИЛЬ ============
+let audioCtx: AudioContext | null = null;
+let tickBuffer: AudioBuffer | null = null;
+let tickLoading = false;
+
+async function loadTickBuffer() {
+  if (tickBuffer || tickLoading) return;
+  tickLoading = true;
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    const response = await fetch(SOUNDS.roulette);
+    const arrayBuffer = await response.arrayBuffer();
+    tickBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+  } catch (e) {
+    console.error('Failed to load tick buffer', e);
+  } finally {
+    tickLoading = false;
+  }
+}
+
+export function playRouletteSpin(totalDuration = 4200) {
   if (!sfxEnabled) return;
 
-  let elapsed = 0;
-  let interval = 40; // стартовый интервал в мс — очень плотный
-  const ticks: number[] = [];
-
-  while (elapsed < totalDuration - 100) {
-    ticks.push(elapsed);
-
-    // После 40% времени — плавное замедление
-    const progress = elapsed / totalDuration;
-    if (progress > 0.4) {
-      interval *= 1.13;
-    } else {
-      interval *= 1.03;
-    }
-    elapsed += interval;
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
   }
 
-  // Финальный тик точно в момент остановки
-  ticks.push(totalDuration);
+  if (!tickBuffer) {
+    loadTickBuffer().then(() => playRouletteSpin(totalDuration));
+    return;
+  }
 
-  ticks.forEach((delay, index) => {
-    setTimeout(() => {
-      try {
-        const audio = new Audio(SOUNDS.roulette);
-        // Первые тики чуть громче, последние — тише (эффект удаления)
-        const progress = index / ticks.length;
-        audio.volume = 0.35 - progress * 0.15;
-        audio.play().catch(() => {});
-      } catch {}
-    }, delay);
+  // Генерируем серию задержек с ускорением → замедлением
+  const delays: number[] = [];
+  let elapsed = 0;
+  let interval = 50;
+
+  while (elapsed < totalDuration - 200) {
+    delays.push(elapsed);
+    const progress = elapsed / totalDuration;
+    interval *= progress > 0.35 ? 1.16 : 1.04;
+    elapsed += interval;
+  }
+  delays.push(totalDuration - 100);
+
+  // Планируем все тики через AudioContext (точно и без лагов)
+  const startTime = audioCtx.currentTime;
+  delays.forEach((delay, index) => {
+    const progress = index / delays.length;
+    const volume = 0.4 - progress * 0.2;
+    const when = startTime + delay / 1000;
+
+    try {
+      const source = audioCtx!.createBufferSource();
+      source.buffer = tickBuffer!;
+      const gain = audioCtx!.createGain();
+      gain.gain.value = volume;
+      source.connect(gain);
+      gain.connect(audioCtx!.destination);
+      source.start(when);
+    } catch (e) {}
   });
 }
