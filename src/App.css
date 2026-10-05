@@ -2219,4 +2219,19 @@ h2 {
 
 .tabs button {
   position: relative;
+}/* Компактные под-вкладки Амбара, чтобы все 5 влезли */
+.subtabs button {
+  padding: 10px 8px;
+  font-size: 13px;
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Компактная шапка, если вдруг у тебя 5 кнопок тоже обрезаются */
+.tabs button {
+  padding: 10px 8px;
+  font-size: 13px;
 }
