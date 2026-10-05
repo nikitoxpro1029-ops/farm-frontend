@@ -266,15 +266,23 @@ const loadBadge = async () => {
       )}
 
       <nav className="tabs">
-       <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>
-  🏚 Амбар
-  {questsBadge > 0 && <span className="tab-badge">{questsBadge}</span>}
-</button>
-        <button className={activeTab === 'game' ? 'active' : ''} onClick={() => setActiveTab('game')}>🎮 Игры</button>
-        <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => setActiveTab('profile')}>👤</button>
-        <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
-        <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>Паки</button>
-      </nav>
+  <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>
+    Амбар
+    {questsBadge > 0 && <span className="tab-badge">{questsBadge}</span>}
+  </button>
+  <button className={activeTab === 'game' ? 'active' : ''} onClick={() => setActiveTab('game')}>
+    Игры
+  </button>
+  <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => setActiveTab('profile')}>
+    Профиль
+  </button>
+  <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>
+    Ферма
+  </button>
+  <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>
+    Паки
+  </button>
+</nav>
 
       <main className="content">
         {activeTab === 'farm' && (

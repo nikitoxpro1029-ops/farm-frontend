@@ -144,36 +144,22 @@ function Barn({ onSell }: BarnProps) {
       <h2>🏚 Амбар</h2>
 
       <div className="subtabs">
-        <button
-          className={subTab === 'items' ? 'active' : ''}
-          onClick={() => setSubTab('items')}
-        >
-          Урожай
-        </button>
-        <button
-          className={subTab === 'craft' ? 'active' : ''}
-          onClick={() => setSubTab('craft')}
-        >🍳 Кухня
-        </button>
-        <button
-          className={subTab === 'quests' ? 'active' : ''}
-          onClick={() => setSubTab('quests')}
-        >
-          📋 Задания
-        </button>
-        <button
-          className={subTab === 'pets' ? 'active' : ''}
-          onClick={() => setSubTab('pets')}
-        >
-          🐾 Питомцы
-        </button>
-        <button
-          className={subTab === 'bonus' ? 'active' : ''}
-          onClick={() => setSubTab('bonus')}
-        >
-          🎁 Бонус
-        </button>
-      </div>
+  <button className={subTab === 'items' ? 'active' : ''} onClick={() => setSubTab('items')}>
+    Урожай
+  </button>
+  <button className={subTab === 'craft' ? 'active' : ''} onClick={() => setSubTab('craft')}>
+    Кухня
+  </button>
+  <button className={subTab === 'quests' ? 'active' : ''} onClick={() => setSubTab('quests')}>
+    Задания
+  </button>
+  <button className={subTab === 'pets' ? 'active' : ''} onClick={() => setSubTab('pets')}>
+    Питомцы
+  </button>
+  <button className={subTab === 'bonus' ? 'active' : ''} onClick={() => setSubTab('bonus')}>
+    Бонус
+  </button>
+</div>
 
       {subTab === 'items' && (
         <>
