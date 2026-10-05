@@ -4,6 +4,7 @@ import axios from 'axios';
 import Pets from './Pets';
 import Bonus from './Bonus';
 import CropIcon from './CropIcon';
+import CookingGame from './CookingGame';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -43,6 +44,7 @@ function Barn({ onSell }: BarnProps) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [crafting, setCrafting] = useState<number | null>(null);
+  const [cookingRecipe, setCookingRecipe] = useState<Recipe | null>(null);
   const [subTab, setSubTab] = useState<'items' | 'craft' | 'pets' | 'bonus'>('items');
   const tg = (window as any).Telegram?.WebApp;
 
@@ -94,16 +96,32 @@ function Barn({ onSell }: BarnProps) {
     }
   };
 
-  const craft = async (recipeId: number) => {
+  // Открыть мини-игру
+  const startCooking = (recipe: Recipe) => {
+    if (!recipe.canCraft) return;
+    setCookingRecipe(recipe);
+  };
+
+  // Мини-игра завершена — отправляем крафт с множителем
+  const finishCooking = async (multiplier: number) => {
+    if (!cookingRecipe) return;
+    const recipeId = cookingRecipe.id;
+    setCookingRecipe(null);
     setCrafting(recipeId);
+
     try {
       const initData = tg?.initData || '';
       const res = await axios.post(
         API_URL + '/api/craft/craft',
-        { recipeId },
+        { recipeId, multiplier },
         { headers: { 'x-telegram-init-data': initData } }
       );
-      tg?.showAlert('🎉 Готово: ' + res.data.resultName);
+
+      let msg = '🍳 Готово: ' + res.data.resultName;
+      if (res.data.bonus > 0) {
+        msg += '\n💰 Бонус за точность: +' + res.data.bonus;
+      }
+      tg?.showAlert(msg);
       tg?.HapticFeedback?.notificationOccurred('success');
       load();
       onSell();
@@ -112,6 +130,10 @@ function Barn({ onSell }: BarnProps) {
     } finally {
       setCrafting(null);
     }
+  };
+
+  const cancelCooking = () => {
+    setCookingRecipe(null);
   };
 
   if (loading) return <p className="empty">Загрузка...</p>;
@@ -130,10 +152,9 @@ function Barn({ onSell }: BarnProps) {
           Урожай
         </button>
         <button
-          className={subTab === 'craft' ? 'active' : ''}
-          onClick={() => setSubTab('craft')}
+          className={subTab === 'craft' ? 'active' : ''}onClick={() => setSubTab('craft')}
         >
-          🔨 Крафт
+          🍳 Кухня
         </button>
         <button
           className={subTab === 'pets' ? 'active' : ''}
@@ -153,7 +174,8 @@ function Barn({ onSell }: BarnProps) {
         <>
           {items.length === 0 ? (
             <p className="empty">Амбар пуст. Соберите урожай!</p>
-          ) : (<>
+          ) : (
+            <>
               <div className="barn-header">
                 <span>Всего: <strong>{totalValue}💰</strong></span>
                 <button className="sell-all-btn" onClick={sellAll}>
@@ -186,7 +208,7 @@ function Barn({ onSell }: BarnProps) {
 
       {subTab === 'craft' && (
         <>
-          <p className="craft-hint">Соединяй урожай в дорогие блюда</p>
+          <p className="craft-hint">Останови маркер в зелёной зоне — получишь бонус 💰</p>
           <div className="craft-list">
             {recipes.map((recipe) => (
               <div key={recipe.id} className={'craft-card ' + recipe.resultRarity}>
@@ -214,10 +236,14 @@ function Barn({ onSell }: BarnProps) {
 
                 <button
                   className="craft-btn"
-                  onClick={() => craft(recipe.id)}
+                  onClick={() => startCooking(recipe)}
                   disabled={!recipe.canCraft || crafting === recipe.id}
                 >
-                  {crafting === recipe.id ? 'Готовим...' : recipe.canCraft ? 'Скрафтить' : 'Не хватает'}
+                  {crafting === recipe.id
+                    ? 'Готовим...'
+                    : recipe.canCraft
+                    ? '🍳 Готовить'
+                    : 'Не хватает'}
                 </button>
               </div>
             ))}
@@ -227,6 +253,16 @@ function Barn({ onSell }: BarnProps) {
 
       {subTab === 'pets' && <Pets onUpdate={onSell} />}
       {subTab === 'bonus' && <Bonus onClaim={onSell} />}
+
+      {cookingRecipe && (
+        <CookingGame
+          recipeName={cookingRecipe.resultName}
+          resultName={cookingRecipe.resultName}
+          resultPrice={cookingRecipe.resultPrice}
+          onFinish={finishCooking}
+          onCancel={cancelCooking}
+        />
+      )}
     </div>
   );
 }

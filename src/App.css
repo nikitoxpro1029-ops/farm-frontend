@@ -1892,4 +1892,171 @@ h2 {
   font-size: 10px;
   color: #888;
   line-height: 1.1;
+}/* ============================================
+   🍳 КУХНЯ — мини-игра готовки
+   ============================================ */
+
+.cooking-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cooking-modal {
+  background: #2d2d44;
+  border: 2px solid #4caf50;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(76, 175, 80, 0.5);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  0%   { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.cooking-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.cooking-sub {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+/* Полоса со шкалой */
+.cooking-bar {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  background: #1a1a2e;
+  border-radius: 22px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 2px solid #444;
+}
+
+.czone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0.85;
+}
+
+.czone-miss    { background: #b33a3a; }
+.czone-ok      { background: #c9a227; }
+.czone-good    { background: #4caf50; }
+.czone-perfect {
+  background: #2ecc71;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Двигающийся маркер */
+.cmarker {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 6px;
+  background: #fff;
+  border-radius: 3px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px #fff, 0 0 20px #4caf50;
+  transition: none;
+}
+
+/* Кнопка СТОП */
+.cooking-stop-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 18px 32px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #2e7d32;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.cooking-stop-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2e7d32;
+}
+
+/* Результат */
+.cooking-result {
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  animation: popIn 0.3s ease;
+}
+
+.cooking-result-perfect {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow: 0 0 30px #2ecc71;
+}
+.cooking-result-good {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+}
+.cooking-result-ok {
+  background: linear-gradient(135deg, #c9a227, #a8861e);
+}
+.cooking-result-miss {
+  background: linear-gradient(135deg, #b33a3a, #7a2626);
+}
+
+.cooking-result-label {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.cooking-result-bonus {
+  font-size: 16px;
+  color: #fff;
+  opacity: 0.95;
+}
+
+/* Кнопка Отмена */
+.cooking-cancel-btn {
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.cooking-cancel-btn:active {
+  color: #fff;
 }
