@@ -6,6 +6,7 @@ import Barn from './components/Barn';
 import MemoryGame from './components/MemoryGame';
 import Profile from './components/Profile';
 import Coin from './components/Coin';
+import TutorialOverlay from './components/TutorialOverlay';
 import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx } from './Sounds';
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
   const [xpForNext, setXpForNext] = useState(100);
   const [activeTab, setActiveTab] = useState('farm');
   const [questsBadge, setQuestsBadge] = useState(0);
+  const [tutorialKey, setTutorialKey] = useState(0);
   const tg = (window as any).Telegram?.WebApp;
 const loadBadge = async () => {
   try {
@@ -306,6 +308,14 @@ const loadBadge = async () => {
         {activeTab === 'game' && <MemoryGame onFinish={loadState} />}
         {activeTab === 'profile' && <Profile />}
       </main>
+      <TutorialOverlay
+        key={tutorialKey}
+        onAdvance={() => setTutorialKey(k => k + 1)}
+        onComplete={() => {
+          loadState();
+          loadBadge();
+        }}
+      />
     </div>
   );
 }
