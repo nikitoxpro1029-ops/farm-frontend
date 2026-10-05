@@ -186,14 +186,14 @@ function Farm({
               <div className="crop-streak">🔥 {crop.water_streak}/3</div>
             )}
 
-            {!isReady(crop.ready_at) && crop.water_level < 100 && (
-              <button
-                className="water-btn"
-                onClick={() => setWateringCropId(crop.id)}
-              >
-                💧 Полить
-              </button>
-            )}
+            {!isReady(crop.ready_at) && (
+  <button
+    className="water-btn"
+    onClick={() => setWateringCropId(crop.id)}
+  >
+    💧 Полить
+  </button>
+)}
 
             {!isReady(crop.ready_at) && !crop.fertilized && (
               <button
