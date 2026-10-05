@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import WaterGame from './WaterGame';
 import CropIcon from './CropIcon';
 
@@ -109,6 +108,16 @@ function Farm({
 
   const isReady = (readyAt: string) => new Date(readyAt).getTime() <= now;
 
+  const getGrowthStyle = (plantedAt: string, readyAt: string) => {
+    const percent = getProgress(plantedAt, readyAt);
+    let scale = 0.4;
+    let opacity = 0.5;
+    if (percent >= 25) { scale = 0.55; opacity = 0.7; }
+    if (percent >= 50) { scale = 0.75; opacity = 0.85; }
+    if (percent >= 75) { scale = 0.9; opacity = 0.95; }
+    return { transform: 'scale(' + scale + ')', opacity: opacity };
+  };
+
   return (
     <div className="farm">
       {plotsInfo && (
@@ -121,8 +130,7 @@ function Farm({
           </div>
           {plotsInfo.canBuy && (
             <button className="buy-plot-btn" onClick={onBuyPlot}>
-              + Грядка<br />
-              <span className="buy-plot-price">{plotsInfo.nextPrice}💰</span>
+              + Грядка<br /><span className="buy-plot-price">{plotsInfo.nextPrice}💰</span>
             </button>
           )}
         </div>
@@ -184,11 +192,9 @@ function Farm({
             )}
 
             <div className="crop-image">
-              {isReady(crop.ready_at) ? (
+              <div style={isReady(crop.ready_at) ? {} : getGrowthStyle(crop.planted_at, crop.ready_at)}>
                 <CropIcon name={crop.name} size={56} />
-              ) : (
-                <span className="crop-sprout">🌱</span>
-              )}
+              </div>
             </div>
             <div className="crop-name">{crop.name}</div>
 
@@ -252,7 +258,8 @@ function Farm({
                   <div
                     className={
                       'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')
-                    }>
+                    }
+                  >
                     {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось:{' '}
                     {getExpireTime(crop.expires_at)}
                   </div>
