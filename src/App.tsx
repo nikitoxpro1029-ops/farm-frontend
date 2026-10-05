@@ -15,7 +15,7 @@ function App() {
   const [crops, setCrops] = useState([]);
   const [seeds, setSeeds] = useState([]);
   const [plotsInfo, setPlotsInfo] = useState<any>(null);
-  const [autowater, setAutowater] = useState<any>(null);
+  const [autowater, setAutowater] = useState<any>(null);const [referralInfo, setReferralInfo] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('farm');
 
   const tg = (window as any).Telegram?.WebApp;
@@ -26,7 +26,22 @@ function App() {
       tg.expand();
       tg.disableVerticalSwipes?.();
     }
-    loadState();
+    loadState();// Обработка реферальной ссылки
+    const startParam = tg?.initDataUnsafe?.start_param;
+    if (startParam && startParam.startsWith('ref_')) {
+      const referrerId = startParam.replace('ref_', '');
+      const initData = tg?.initData || '';
+      axios.post(
+        API_URL + '/api/farm/set-referrer',
+        { referrerTelegramId: referrerId },
+        { headers: { 'x-telegram-init-data': initData } }
+      ).then((res) => {
+        if (res.data.success) {
+          tg?.showAlert('🎁 Ты получил 200 монет за вход по приглашению!');
+          loadState();
+        }
+      }).catch(() => {});
+    }
 
     let startX = 0;
     let startY = 0;
@@ -65,7 +80,8 @@ function App() {
       setAutowater(res.data.autowater);
 
       const plotsRes = await axios.get(API_URL + '/api/farm/plots', { headers });
-      setPlotsInfo(plotsRes.data);
+      setPlotsInfo(plotsRes.data);const refRes = await axios.get(API_URL + '/api/farm/referral-info', { headers });
+      setReferralInfo(refRes.data);
     } catch (error) {
       console.error('Failed to load state:', error);
     }
@@ -175,6 +191,16 @@ function App() {
       loadState();
     } catch (error: any) {
       tg?.showAlert(error.response?.data?.error || 'Ошибка');
+    }
+  };const inviteFriend = () => {
+    if (!user) return;
+    const refLink = 'https://t.me/Farmm_game_bot/farm?startapp=ref_' + user.telegram_id;
+    const shareText = '🌾 Заходи в мою ферму! Получишь 200 монет на старт + крутая игра!';
+    const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(refLink) + '&text=' + encodeURIComponent(shareText);
+    if (tg?.openTelegramLink) {
+      tg.openTelegramLink(shareUrl);
+    } else {
+      window.open(shareUrl, '_blank');
     }
   };
 

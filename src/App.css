@@ -1172,4 +1172,47 @@ html, body {
 
 .buy-autowater-btn:active {
   transform: scale(0.98);
+}/* Реферальная карточка */
+.referral-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(135deg, #9c27b0, #673ab7);
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 20px rgba(156, 39, 176, 0.4);
+}
+
+.referral-text {
+  flex: 1;
+}
+
+.referral-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.referral-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.referral-btn {
+  background: #fff;
+  color: #9c27b0;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.referral-btn:active {
+  transform: scale(0.95);
 }

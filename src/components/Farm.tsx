@@ -34,6 +34,8 @@ interface FarmProps {
   onBuyPlot: () => void;
   autowater: { active: boolean; until: string | null } | null;
   onBuyAutowater: () => void;
+  referralInfo: { referralsCount: number; hasReferrer: boolean } | null;
+  onInvite: () => void;
 }
 
 function Farm({
@@ -47,6 +49,8 @@ function Farm({
   onBuyPlot,
   autowater,
   onBuyAutowater,
+  referralInfo,
+  onInvite,
 }: FarmProps) {
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
@@ -123,6 +127,21 @@ function Farm({
         </div>
       )}
 
+      {referralInfo && (
+        <div className="referral-card">
+          <div className="referral-text">
+            <div className="referral-title">🎁 Пригласи друга</div>
+            <div className="referral-sub">
+              {referralInfo.referralsCount > 0? 'Ты пригласил: ' + referralInfo.referralsCount + ' 👥'
+                : 'Пригласи друга — получи 500💰'}
+            </div>
+          </div>
+          <button className="referral-btn" onClick={onInvite}>
+            Пригласить
+          </button>
+        </div>
+      )}
+
       {autowater && autowater.active && autowater.until && (
         <div className="autowater-banner">
           💧 Автополив активен до{' '}
@@ -133,7 +152,8 @@ function Farm({
         </div>
       )}
 
-      {(!autowater || !autowater.active) && (<button className="buy-autowater-btn" onClick={onBuyAutowater}>
+      {(!autowater || !autowater.active) && (
+        <button className="buy-autowater-btn" onClick={onBuyAutowater}>
           💧 Купить автополив на 24ч — 500💰
         </button>
       )}
@@ -141,7 +161,7 @@ function Farm({
       <h2>Грядки</h2>
       <div className="crops-grid">
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
-        {crops.map((crop) => (
+rop        {crops.map((crop) => (
           <div
             key={crop.id}
             className={
@@ -166,21 +186,21 @@ function Farm({
             </div>
             <div className="crop-name">{crop.name}</div>
 
-           {!isReady(crop.ready_at) && (
-  <div className="crop-water-bar">
-    <div
-      className={
-        'crop-water-fill' +
-        (crop.water_level < 30 ? ' low' : '') +
-        (isThirsty(crop.water_level) ? ' thirsty' : '')
-      }
-      style={{ width: Math.max(crop.water_level, 4) + '%' }}
-    />
-    {isThirsty(crop.water_level) && (
-      <span className="crop-water-warning">⚠️</span>
-    )}
-  </div>
-)}
+            {!isReady(crop.ready_at) && (
+              <div className="crop-water-bar">
+                <div
+                  className={
+                    'crop-water-fill' +
+                    (crop.water_level < 30 ? ' low' : '') +
+                    (isThirsty(crop.water_level) ? ' thirsty' : '')
+                  }
+                  style={{ width: Math.max(crop.water_level, 4) + '%' }}
+                />
+                {isThirsty(crop.water_level) && (
+                  <span className="crop-water-warning">⚠️</span>
+                )}
+              </div>
+            )}
 
             <div className="crop-quality">⭐️ {crop.quality}/100</div>
 
@@ -189,13 +209,13 @@ function Farm({
             )}
 
             {!isReady(crop.ready_at) && (
-  <button
-    className="water-btn"
-    onClick={() => setWateringCropId(crop.id)}
-  >
-    💧 Полить
-  </button>
-)}
+              <button
+                className="water-btn"
+                onClick={() => setWateringCropId(crop.id)}
+              >
+                💧 Полить
+              </button>
+            )}
 
             {!isReady(crop.ready_at) && !crop.fertilized && (
               <button
@@ -246,7 +266,8 @@ function Farm({
                     <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
                     <span className="crop-progress-percent">
                       {getProgress(crop.planted_at, crop.ready_at)}%
-                    </span></div>
+                    </span>
+                  </div>
                 </>
               )}
             </div>
