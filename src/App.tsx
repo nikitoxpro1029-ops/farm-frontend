@@ -6,7 +6,7 @@ import Barn from './components/Barn';
 import Leaderboard from './components/Leaderboard';
 import MemoryGame from './components/MemoryGame';
 import Coin from './components/Coin';
-import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx, playSound } from './Sounds';
+import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx,  } from './Sounds';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
