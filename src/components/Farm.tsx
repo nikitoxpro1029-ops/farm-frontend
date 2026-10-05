@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import WaterGame from './WaterGame';
 import CropIcon from './CropIcon';
+import { playSound } from '../Sounds';
 
 interface Crop {
   id: number;
@@ -246,15 +247,16 @@ function Farm({
               {isReady(crop.ready_at) ? (
                 <>
                   <button
-                    className="harvest-btn"
-                    onClick={() => {
-                      setHarvestingId(crop.id);
-                      onHarvest(crop.id);
-                      setTimeout(() => setHarvestingId(null), 1200);
-                    }}
-                  >
-                    Собрать
-                  </button>
+  className="harvest-btn"
+  onClick={() => {
+    playSound('coins');
+    setHarvestingId(crop.id);
+    onHarvest(crop.id);
+    setTimeout(() => setHarvestingId(null), 1200);
+  }}
+>
+  Собрать
+</button>
                   <div
                     className={
                       'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')

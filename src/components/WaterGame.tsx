@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
+import { playSound } from '../Sounds';
 interface Bubble {
   id: number;
   x: number;
@@ -75,15 +75,12 @@ function WaterGame({ onFinish, onCancel }: WaterGameProps) {
   }, [finished]);
 
   const tap = (id: number) => {
-    if (finished) return;
-    setBubbles((prev) => prev.filter((b) => b.id !== id));
-    setScore((s) => {
-      const ns = s + 1;
-      scoreRef.current = ns;
-      return ns;
-    });
-    tg?.HapticFeedback?.impactOccurred('light');
-  };
+  if (finished) return;
+  playSound('click', 0.3);
+  setBubbles((prev) => prev.filter((b) => b.id !== id));
+  setScore((s) => s + 1);
+  tg?.HapticFeedback?.impactOccurred('light');
+};
 
   return (
     <div className="water-game-overlay">

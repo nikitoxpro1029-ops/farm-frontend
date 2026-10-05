@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-
+import { playSound } from '../Sounds';
 import Coin from './Coin';
 import CropIcon from './CropIcon';
 
@@ -106,6 +106,7 @@ function Packs({ onOpen }: PacksProps) {
       setOffset(0);
       setSpinning(true);
       setResult(null);
+      playSound('roulette', 0.3);
 
       setTimeout(() => {
         const viewportWidth = viewportRef.current?.offsetWidth || 360;
@@ -116,11 +117,12 @@ function Packs({ onOpen }: PacksProps) {
         tg?.HapticFeedback?.impactOccurred('medium');
 
         setTimeout(() => {
-          setSpinning(false);
-          setResult(winner);
-          tg?.HapticFeedback?.notificationOccurred('success');
-          onOpen();
-        }, 4400);
+  setSpinning(false);
+  setResult(winner);
+  playSound('win');
+  tg?.HapticFeedback?.notificationOccurred('success');
+  onOpen();
+}, 4400);
       }, 100);
 
     } catch (error: any) {

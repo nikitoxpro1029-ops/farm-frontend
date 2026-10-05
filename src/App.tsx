@@ -6,6 +6,7 @@ import Barn from './components/Barn';
 import Leaderboard from './components/Leaderboard';
 import MemoryGame from './components/MemoryGame';
 import Coin from './components/Coin';
+import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx, playSound } from './Sounds';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -27,7 +28,13 @@ function App() {
       tg.expand();
       tg.disableVerticalSwipes?.();
     }
-    loadState();
+    loadState();const startMusicOnTouch = () => {
+      if (isMusicEnabled()) startMusic();
+      document.removeEventListener('touchstart', startMusicOnTouch);
+      document.removeEventListener('click', startMusicOnTouch);
+    };
+    document.addEventListener('touchstart', startMusicOnTouch, { once: true });
+    document.addEventListener('click', startMusicOnTouch, { once: true });
 
     const startParam = (tg?.initDataUnsafe as any)?.start_param;
     if (startParam && startParam.startsWith('ref_')) {
@@ -214,11 +221,31 @@ function App() {
     <div className="app">
       <header className="header">
         <h1>🌾 Ферма</h1>
-        {user && (
-          <div className="balance">
-            <Coin size={18} /> {user.balance}
-          </div>
-        )}
+        <div className="header-right">
+          {user && (
+            <div className="balance">
+              <Coin size={18} /> {user.balance}
+            </div>
+          )}
+          <button
+            className="sound-toggle"
+            onClick={() => {
+              const on = toggleSfx();
+              tg?.showAlert(on ? '🔊 Звуки вкл' : '🔇 Звуки выкл');
+            }}
+          >
+            {isSfxEnabled() ? '🔊' : '🔇'}
+          </button>
+          <button
+            className="sound-toggle"
+            onClick={() => {
+              const on = toggleMusic();
+              tg?.showAlert(on ? '🎵 Музыка вкл' : '🔕 Музыка выкл');
+            }}
+          >
+            {isMusicEnabled() ? '🎵' : '🔕'}
+          </button>
+        </div>
       </header>
 
       <nav className="tabs">

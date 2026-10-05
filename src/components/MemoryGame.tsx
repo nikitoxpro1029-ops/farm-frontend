@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import CropIcon from './CropIcon';
-
+import { playSound } from '../Sounds';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const CULTURES = ['Морковь', 'Картофель', 'Капуста', 'Огурец', 'Томат', 'Кукуруза', 'Клубника', 'Баклажан'];
@@ -119,7 +119,7 @@ function MemoryGame({ onFinish }: MemoryGameProps) {
       );
       setReward(res.data.reward);
       setBonusSeed(res.data.bonusSeed);
-      tg?.HapticFeedback?.notificationOccurred('success');
+      playSound('win');tg?.HapticFeedback?.notificationOccurred('success');
       onFinish();
     } catch (error: any) {
       tg?.showAlert(error.response?.data?.error || 'Ошибка');
