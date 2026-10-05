@@ -20,9 +20,19 @@ function App() {
   const [referralInfo, setReferralInfo] = useState<any>(null);
   const [xpForNext, setXpForNext] = useState(100);
   const [activeTab, setActiveTab] = useState('farm');
-
+  const [questsBadge, setQuestsBadge] = useState(0);
   const tg = (window as any).Telegram?.WebApp;
-
+const loadBadge = async () => {
+  try {
+    const initData = tg?.initData || '';
+    const res = await axios.get(API_URL + '/api/quests', {
+      headers: { 'x-telegram-init-data': initData },
+    });
+    setQuestsBadge(res.data.unclaimedReady || 0);
+  } catch (e) {
+    // тихо игнорируем — не ломаем игру, если что-то с заданиями
+  }
+};
   useEffect(() => {
     if (tg) {
       tg.ready();
@@ -30,7 +40,7 @@ function App() {
       tg.disableVerticalSwipes?.();
     }
     loadState();
-
+    
     const startMusicOnTouch = () => {
       if (isMusicEnabled()) startMusic();
       document.removeEventListener('touchstart', startMusicOnTouch);
@@ -78,7 +88,9 @@ function App() {
       document.removeEventListener('touchstart', handleTouchStart);
       document.removeEventListener('touchmove', handleTouchMove);
     };
-  }, []);
+  }, []);useEffect(() => {
+    if (activeTab === 'farm') loadBadge();
+  }, [activeTab]);
 
   const loadState = async () => {
     try {
@@ -254,7 +266,10 @@ function App() {
       )}
 
       <nav className="tabs">
-        <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
+        <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>
+  🏚 Амбар
+  {questsBadge > 0 && <span className="tab-badge">{questsBadge}</span>}
+</button>
         <button className={activeTab === 'game' ? 'active' : ''} onClick={() => setActiveTab('game')}>🎮 Игры</button>
         <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => setActiveTab('profile')}>👤</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
