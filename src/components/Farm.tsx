@@ -161,7 +161,7 @@ function Farm({
       <h2>Грядки</h2>
       <div className="crops-grid">
         {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
-rop        {crops.map((crop) => (
+        {crops.map((crop) => (
           <div
             key={crop.id}
             className={
