@@ -5,6 +5,7 @@ import Packs from './components/Packs';
 import Barn from './components/Barn';
 import Bonus from './components/Bonus';
 import Leaderboard from './components/Leaderboard';
+import Pets from './components/Pets';
 import Coin from './components/Coin';
 import './App.css';
 
@@ -15,7 +16,8 @@ function App() {
   const [crops, setCrops] = useState([]);
   const [seeds, setSeeds] = useState([]);
   const [plotsInfo, setPlotsInfo] = useState<any>(null);
-  const [autowater, setAutowater] = useState<any>(null);const [referralInfo, setReferralInfo] = useState<any>(null);
+  const [autowater, setAutowater] = useState<any>(null);
+  const [referralInfo, setReferralInfo] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('farm');
 
   const tg = (window as any).Telegram?.WebApp;
@@ -26,8 +28,9 @@ function App() {
       tg.expand();
       tg.disableVerticalSwipes?.();
     }
-    loadState();// Обработка реферальной ссылки
-    const startParam = tg?.initDataUnsafe?.start_param;
+    loadState();
+
+    const startParam = (tg?.initDataUnsafe as any)?.start_param;
     if (startParam && startParam.startsWith('ref_')) {
       const referrerId = startParam.replace('ref_', '');
       const initData = tg?.initData || '';
@@ -80,7 +83,9 @@ function App() {
       setAutowater(res.data.autowater);
 
       const plotsRes = await axios.get(API_URL + '/api/farm/plots', { headers });
-      setPlotsInfo(plotsRes.data);const refRes = await axios.get(API_URL + '/api/farm/referral-info', { headers });
+      setPlotsInfo(plotsRes.data);
+
+      const refRes = await axios.get(API_URL + '/api/farm/referral-info', { headers });
       setReferralInfo(refRes.data);
     } catch (error) {
       console.error('Failed to load state:', error);
@@ -122,8 +127,7 @@ function App() {
       const initData = tg?.initData || '';
       const res = await axios.post(
         API_URL + '/api/farm/harvest',
-        { cropId },
-        { headers: { 'x-telegram-init-data': initData } }
+        { cropId },{ headers: { 'x-telegram-init-data': initData } }
       );
       tg?.showAlert('🌾 Собрано: ' + res.data.cropName + '\n💰 Можно продать за ' + res.data.sellPrice + ' монет в Амбаре');
       loadState();
@@ -145,7 +149,8 @@ function App() {
         'Вода: ' + res.data.waterLevel + '%\n' +
         'Качество: ' + res.data.quality + '/100';
 
-      if (res.data.bonusQuality > 0) {message += '\n\n🔥 БОНУС ЗА СЕРИЮ: +10 к качеству!';
+      if (res.data.bonusQuality > 0) {
+        message += '\n\n🔥 БОНУС ЗА СЕРИЮ: +10 к качеству!';
         tg?.HapticFeedback?.notificationOccurred('success');
       } else {
         const left = 3 - (res.data.waterStreak || 0);
@@ -192,7 +197,9 @@ function App() {
     } catch (error: any) {
       tg?.showAlert(error.response?.data?.error || 'Ошибка');
     }
-  };const inviteFriend = () => {
+  };
+
+  const inviteFriend = () => {
     if (!user) return;
     const refLink = 'https://t.me/Farmm_game_bot/farm?startapp=ref_' + user.telegram_id;
     const shareText = '🌾 Заходи в мою ферму! Получишь 200 монет на старт + крутая игра!';
@@ -219,32 +226,32 @@ function App() {
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
         <button className={activeTab === 'bonus' ? 'active' : ''} onClick={() => setActiveTab('bonus')}>Бонус</button>
         <button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
+        <button className={activeTab === 'pets' ? 'active' : ''} onClick={() => setActiveTab('pets')}>Питомцы</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
         <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>Паки</button>
       </nav>
 
       <main className="content">
         {activeTab === 'farm' && (
-          
-           <Farm
-  crops={crops}
-  seeds={seeds}
-  onPlant={plantSeed}
-  onHarvest={harvestCrop}
-  onWater={waterCrop}
-  onFertilize={fertilize}
-  plotsInfo={plotsInfo}
-  onBuyPlot={buyPlot}
-  autowater={autowater}
-  onBuyAutowater={buyAutowater}
-  referralInfo={referralInfo}
-  onInvite={inviteFriend}
-/>
+          <Farm
+            crops={crops}
+            seeds={seeds}
+            onPlant={plantSeed}
+            onHarvest={harvestCrop}
+            onWater={waterCrop}
+            onFertilize={fertilize}
+            plotsInfo={plotsInfo}onBuyPlot={buyPlot}
+            autowater={autowater}
+            onBuyAutowater={buyAutowater}
+            referralInfo={referralInfo}
+            onInvite={inviteFriend}
+          />
         )}
         {activeTab === 'packs' && <Packs onOpen={loadState} />}
         {activeTab === 'barn' && <Barn onSell={loadState} />}
         {activeTab === 'bonus' && <Bonus onClaim={loadState} />}
         {activeTab === 'top' && <Leaderboard />}
+        {activeTab === 'pets' && <Pets onUpdate={loadState} />}
       </main>
     </div>
   );

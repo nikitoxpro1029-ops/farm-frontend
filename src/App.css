@@ -1215,4 +1215,129 @@ html, body {
 
 .referral-btn:active {
   transform: scale(0.95);
+}/* Питомцы */
+.pets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pet-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #2d2d44, #3a3a55);
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+}
+
+.pet-card.cat { border-color: #ff9800; }
+.pet-card.dog { border-color: #8bc34a; }
+.pet-card.chicken { border-color: #ffc107; }
+
+.pet-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.pet-info {
+  flex: 1;
+}
+
+.pet-name {
+  font-weight: bold;
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.pet-status {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.pet-collect-btn {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  animation: pet-pulse 1.5s infinite;
+}
+
+@keyframes pet-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(76, 175, 80, 0.6); }
+  50% { box-shadow: 0 0 16px rgba(76, 175, 80, 1); }
+}
+
+.pets-shop {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.pet-shop-card {
+  background: #2d2d44;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pet-shop-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.pet-shop-name {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.pet-shop-desc {
+  font-size: 10px;
+  color: #888;
+  min-height: 24px;
+}
+
+.pet-shop-price {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.pet-buy-btn {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.pet-buy-btn:disabled {
+  opacity: 0.5;
+}
+
+.pet-owned-badge {
+  background: #4caf50;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 4px;
 }
