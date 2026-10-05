@@ -5,7 +5,7 @@ import Packs from './components/Packs';
 import Barn from './components/Barn';
 import Bonus from './components/Bonus';
 import Leaderboard from './components/Leaderboard';
-import Pets from './components/Pets';
+
 import Coin from './components/Coin';
 import './App.css';
 
@@ -226,7 +226,7 @@ function App() {
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
         <button className={activeTab === 'bonus' ? 'active' : ''} onClick={() => setActiveTab('bonus')}>Бонус</button>
         <button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
-        <button className={activeTab === 'pets' ? 'active' : ''} onClick={() => setActiveTab('pets')}>Питомцы</button>
+       
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
         <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>Паки</button>
       </nav>
@@ -251,7 +251,7 @@ function App() {
         {activeTab === 'barn' && <Barn onSell={loadState} />}
         {activeTab === 'bonus' && <Bonus onClaim={loadState} />}
         {activeTab === 'top' && <Leaderboard />}
-        {activeTab === 'pets' && <Pets onUpdate={loadState} />}
+        
       </main>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSeedIcon } from '../seedIcons';
-import Coin from './Coin';
+import Pets from './Pets';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -41,7 +41,7 @@ function Barn({ onSell }: BarnProps) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [crafting, setCrafting] = useState<number | null>(null);
-  const [subTab, setSubTab] = useState<'items' | 'craft'>('items');
+  const [subTab, setSubTab] = useState<'items' | 'craft' | 'pets'>('items');
   const tg = (window as any).Telegram?.WebApp;
 
   useEffect(() => {
@@ -133,6 +133,12 @@ function Barn({ onSell }: BarnProps) {
         >
           🔨 Крафт
         </button>
+        <button
+          className={subTab === 'pets' ? 'active' : ''}
+          onClick={() => setSubTab('pets')}
+        >
+          🐾 Питомцы
+        </button>
       </div>
 
       {subTab === 'items' && (
@@ -142,22 +148,22 @@ function Barn({ onSell }: BarnProps) {
           ) : (
             <>
               <div className="barn-header">
-                <span>Всего: <strong><Coin size={14} /> {totalValue}</strong></span>
+                <span>Всего: <strong>{totalValue}💰</strong></span>
                 <button className="sell-all-btn" onClick={sellAll}>
-                  Продать всё
-                </button>
+                  Продать всё</button>
               </div>
 
               <div className="barn-grid">
                 {items.map((item) => (
-                  <div key={item.id} className={'barn-card ' + item.rarity}><div className="barn-icon">{getSeedIcon(item.name)}</div>
+                  <div key={item.id} className={'barn-card ' + item.rarity}>
+                    <div className="barn-icon">{getSeedIcon(item.name)}</div>
                     <div className="barn-name">{item.name}</div>
                     <div className="barn-qty">x{item.quantity}</div>
-                    <div className="barn-price"><Coin size={12} /> {item.sell_price} за шт</div>
+                    <div className="barn-price">💰 {item.sell_price} за шт</div>
                     <div className="barn-actions">
                       <button onClick={() => sell(item.seed_type_id, 1)}>1</button>
                       <button onClick={() => sell(item.seed_type_id, item.quantity)}>
-                        Все ({item.sell_price * item.quantity})
+                        Все ({item.sell_price * item.quantity}💰)
                       </button>
                     </div>
                   </div>
@@ -204,6 +210,8 @@ function Barn({ onSell }: BarnProps) {
           </div>
         </>
       )}
+
+      {subTab === 'pets' && <Pets onUpdate={onSell} />}
     </div>
   );
 }
