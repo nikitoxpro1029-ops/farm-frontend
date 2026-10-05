@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSeedIcon } from '../seedIcons';
+
 import WaterGame from './WaterGame';
 import CropIcon from './CropIcon';
 

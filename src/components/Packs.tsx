@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { getSeedIcon } from '../seedIcons';
+
 import Coin from './Coin';
 import CropIcon from './CropIcon';
 
