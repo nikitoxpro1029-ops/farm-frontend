@@ -123,7 +123,7 @@ function Farm({
             <button className="buy-plot-btn" onClick={onBuyPlot}>
               + Грядка<br />
               <span className="buy-plot-price">{plotsInfo.nextPrice}💰</span>
-[05.10.2026 22:55] Никита: </button>
+</button>
           )}
         </div>
       )}
