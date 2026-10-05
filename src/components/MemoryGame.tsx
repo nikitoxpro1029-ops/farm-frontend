@@ -127,10 +127,19 @@ function MemoryGame({ onFinish }: MemoryGameProps) {
   };
 
   const formatNextPlay = (ms: number) => {
-    const mins = Math.floor(ms / 60000);
-    const secs = Math.floor((ms % 60000) / 1000);
+  const totalSecs = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSecs / 3600);
+  const mins = Math.floor((totalSecs % 3600) / 60);
+  const secs = totalSecs % 60;
+
+  if (hours > 0) {
+    return hours + 'ч ' + mins + 'м';
+  }
+  if (mins > 0) {
     return mins + 'м ' + secs + 'с';
-  };
+  }
+  return secs + 'с';
+};
 
   if (canPlay === null) return <p className="empty">Загрузка...</p>;
 

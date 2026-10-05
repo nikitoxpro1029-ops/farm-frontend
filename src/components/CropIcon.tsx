@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { getSeedIcon } from '../seedIcons';
+
 interface CropIconProps {
   name: string;
   size?: number;
@@ -6,8 +9,7 @@ interface CropIconProps {
 
 const ICON_MAP: { [key: string]: string } = {
   'Пшеница': 'wheat.png',
-  'Морковь': 'carrot.png','Морковь золотая': 'carrot.png',
-
+  'Морковь': 'carrot.png',
   'Картофель': 'potato.png',
   'Капуста': 'cabbage.png',
   'Огурец': 'cucumber.png',
@@ -34,18 +36,27 @@ const ICON_MAP: { [key: string]: string } = {
   'Молочный коктейль': 'milkshake.png',
 };
 
-const GROWTH_MAP: { [key: string]: string } = {
-  '🌱': 'sprout.png',
-  '🌿': 'young.png',
-  '🪴': 'growing.png',
-  '🌾': 'almost.png',
-};
-
 function CropIcon({ name, size = 48, className = '' }: CropIconProps) {
-  const file = ICON_MAP[name] || GROWTH_MAP[name];
-  if (!file) {
-    return <span style={{ fontSize: size }}>🌰</span>;
+  const [imgError, setImgError] = useState(false);
+  const file = ICON_MAP[name];
+
+  if (!file || imgError) {
+    return (
+      <span
+        className={className}
+        style={{
+          fontSize: size,
+          lineHeight: 1,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {getSeedIcon(name)}
+      </span>
+    );
   }
+
   return (
     <img
       src={'/crops/' + file}
@@ -55,6 +66,7 @@ function CropIcon({ name, size = 48, className = '' }: CropIconProps) {
       className={className}
       style={{ display: 'block', objectFit: 'contain' }}
       draggable={false}
+      onError={() => setImgError(true)}
     />
   );
 }
