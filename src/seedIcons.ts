@@ -21,6 +21,10 @@ const ICONS: Record<string, string> = {
   'TomatnyySok': '🧃',
   'DrakoniyEliksir': '🧪',
   'Yaytso': '🥚',
+  'Moloko': '🥛',
+  'Syr': '🧀',
+  'Chizkeyk': '🍰',
+  'MolokoKoktel': '🥤',
 };
 
 const NAME_MAP: Record<string, string> = {
@@ -46,6 +50,10 @@ const NAME_MAP: Record<string, string> = {
   'Томатный сок': 'TomatnyySok',
   'Драконий эликсир': 'DrakoniyEliksir',
   'Яйцо': 'Yaytso',
+  'Молоко': 'Moloko',
+  'Сыр': 'Syr',
+  'Чизкейк': 'Chizkeyk',
+  'Молочный коктейль': 'MolokoKoktel',
 };
 
 export const getSeedIcon = (name: string): string => {

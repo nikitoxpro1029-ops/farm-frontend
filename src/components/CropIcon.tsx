@@ -28,6 +28,10 @@ const ICON_MAP: { [key: string]: string } = {
   'Клубничное варенье': 'jam.png',
   'Томатный сок': 'juice.png',
   'Драконий эликсир': 'potion.png',
+  'Молоко': 'milk.png',
+  'Сыр': 'cheese.png',
+  'Чизкейк': 'cheesecake.png',
+  'Молочный коктейль': 'milkshake.png',
 };
 
 const GROWTH_MAP: { [key: string]: string } = {

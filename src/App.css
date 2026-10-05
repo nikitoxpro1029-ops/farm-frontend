@@ -1402,4 +1402,43 @@ html, body {
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
   font-size: 48px;
   line-height: 1;
+}/* Memory игра */
+.memorygame {
+  padding: 8px;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.memory-card {
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, #3a3a55, #2d2d44);
+  border: 2px solid #4a4a66;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  padding: 4px;
+}
+
+.memory-card:active {
+  transform: scale(0.95);
+}
+
+.memory-card.open {
+  background: linear-gradient(135deg, #1e3a1f, #2d2d44);
+  border-color: #4caf50;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.5);
+}
+
+.memory-back {
+  font-size: 28px;
+  color: #666;
+  font-weight: bold;
 }
