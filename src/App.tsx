@@ -3,7 +3,6 @@ import axios from 'axios';
 import Farm from './components/Farm';
 import Packs from './components/Packs';
 import Barn from './components/Barn';
-import Bonus from './components/Bonus';
 import Leaderboard from './components/Leaderboard';
 import MemoryGame from './components/MemoryGame';
 import Coin from './components/Coin';
@@ -126,8 +125,8 @@ function App() {
     try {
       const initData = tg?.initData || '';
       const res = await axios.post(
-        API_URL + '/api/farm/harvest',{ cropId },
-        { headers: { 'x-telegram-init-data': initData } }
+        API_URL + '/api/farm/harvest',
+        { cropId },{ headers: { 'x-telegram-init-data': initData } }
       );
       tg?.showAlert('🌾 Собрано: ' + res.data.cropName + '\n💰 Можно продать за ' + res.data.sellPrice + ' монет в Амбаре');
       loadState();
@@ -224,7 +223,6 @@ function App() {
 
       <nav className="tabs">
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
-        <button className={activeTab === 'bonus' ? 'active' : ''} onClick={() => setActiveTab('bonus')}>Бонус</button>
         <button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
         <button className={activeTab === 'game' ? 'active' : ''} onClick={() => setActiveTab('game')}>🎮 Игры</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
@@ -239,17 +237,16 @@ function App() {
             onPlant={plantSeed}
             onHarvest={harvestCrop}
             onWater={waterCrop}
-            onFertilize={fertilize}plotsInfo={plotsInfo}
+            onFertilize={fertilize}
+            plotsInfo={plotsInfo}
             onBuyPlot={buyPlot}
             autowater={autowater}
-            onBuyAutowater={buyAutowater}
-            referralInfo={referralInfo}
+            onBuyAutowater={buyAutowater}referralInfo={referralInfo}
             onInvite={inviteFriend}
           />
         )}
         {activeTab === 'packs' && <Packs onOpen={loadState} />}
         {activeTab === 'barn' && <Barn onSell={loadState} />}
-        {activeTab === 'bonus' && <Bonus onClaim={loadState} />}
         {activeTab === 'top' && <Leaderboard />}
         {activeTab === 'game' && <MemoryGame onFinish={loadState} />}
       </main>

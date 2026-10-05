@@ -7,9 +7,11 @@ interface Pet {
   id: number;
   type: string;
   name: string;
+  quantity: number;
   pendingIncome: number;
   canCollect: boolean;
   hoursSince: number;
+  productName?: string;
 }
 
 interface CatalogItem {
@@ -18,9 +20,17 @@ interface CatalogItem {
   price: number;
   income: number;
   maxHours: number;
+  single: boolean;
+  interval?: number;
+  productPrice?: number;
+  productName?: string;
 }
 
-function Pets({ onUpdate }: { onUpdate: () => void }) {
+interface PetsProps {
+  onUpdate: () => void;
+}
+
+function Pets({ onUpdate }: PetsProps) {
   const [pets, setPets] = useState<Pet[]>([]);
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +87,7 @@ function Pets({ onUpdate }: { onUpdate: () => void }) {
       if (res.data.type === 'coins') {
         tg?.showAlert('💰 Получено: ' + res.data.reward + ' монет!');
       } else {
-        tg?.showAlert('🥚 Получено: ' + res.data.reward + ' яиц!');
+        tg?.showAlert('📦 Получено: ' + res.data.reward + ' шт. ' + res.data.productName);
       }
       tg?.HapticFeedback?.notificationOccurred('success');
       load();
@@ -87,9 +97,20 @@ function Pets({ onUpdate }: { onUpdate: () => void }) {
     }
   };
 
-  if (loading) return <p className="empty">Загрузка...</p>;
+  const getOwnedQuantity = (type: string) => {
+    const pet = pets.find((p) => p.type === type);
+    return pet ? pet.quantity : 0;
+  };
 
-  const ownedTypes = pets.map((p) => p.type);
+  const getPetIcon = (type: string) => {
+    if (type === 'cat') return '🐱';
+    if (type === 'dog') return '🐶';
+    if (type === 'chicken') return '🐔';
+    if (type === 'cow') return '🐮';
+    return '🐾';
+  };
+
+  if (loading) return <p className="empty">Загрузка...</p>;
 
   return (
     <div className="pets">
@@ -100,23 +121,25 @@ function Pets({ onUpdate }: { onUpdate: () => void }) {
       <div className="pets-list">
         {pets.map((pet) => (
           <div key={pet.id} className={'pet-card ' + pet.type}>
-            <div className="pet-icon">
-              {pet.type === 'cat' ? '🐱' : pet.type === 'dog' ? '🐶' : '🐔'}
-            </div>
+            <div className="pet-icon">{getPetIcon(pet.type)}</div>
             <div className="pet-info">
-              <div className="pet-name">{pet.name}</div>
+              <div className="pet-name">
+                {pet.name}
+                {pet.quantity > 1 && <span className="pet-qty"> x{pet.quantity}</span>}
+              </div>
               {pet.type === 'cat' && (
                 <div className="pet-status">💰 Накоплено: {pet.pendingIncome}</div>
               )}
               {pet.type === 'dog' && (
                 <div className="pet-status">🛡 +12ч к сроку увядания</div>
               )}
-              {pet.type === 'chicken' && (
-                <div className="pet-status">🥚 Накоплено: {Math.floor(pet.pendingIncome / 100)} шт.</div>
+              {(pet.type === 'chicken' || pet.type === 'cow') && (
+                <div className="pet-status">
+                  📦 Накоплено: {pet.pendingIncome > 0 ? Math.floor(pet.pendingIncome / (pet.type === 'chicken' ? 100 : 200)) : 0} шт.
+                </div>
               )}
             </div>
-            {pet.canCollect && (
-              <button className="pet-collect-btn" onClick={() => collect(pet.id)}>
+            {pet.canCollect && (<button className="pet-collect-btn" onClick={() => collect(pet.id)}>
                 Забрать
               </button>
             )}
@@ -128,20 +151,25 @@ function Pets({ onUpdate }: { onUpdate: () => void }) {
 
       <div className="pets-shop">
         {catalog.map((item) => {
-          const owned = ownedTypes.includes(item.type);
+          const isSingle = item.type === 'cat' || item.type === 'dog';
+          const ownedQty = getOwnedQuantity(item.type);
+          const isOwnedSingle = isSingle && ownedQty > 0;
+
           return (
             <div key={item.type} className="pet-shop-card">
-              <div className="pet-shop-icon">
-                {item.type === 'cat' ? '🐱' : item.type === 'dog' ? '🐶' : '🐔'}
-              </div>
+              <div className="pet-shop-icon">{getPetIcon(item.type)}</div>
               <div className="pet-shop-name">{item.name}</div>
+              {ownedQty > 0 && !isSingle && (
+                <div className="pet-shop-owned">У вас: {ownedQty}</div>
+              )}
               <div className="pet-shop-desc">
                 {item.type === 'cat' && '50💰/час (макс 10ч)'}
                 {item.type === 'dog' && '+12ч к увяданию'}
                 {item.type === 'chicken' && '1 яйцо / 2 часа'}
+                {item.type === 'cow' && '1 молоко / 3 часа'}
               </div>
               <div className="pet-shop-price">💰 {item.price}</div>
-              {owned ? (
+              {isOwnedSingle ? (
                 <div className="pet-owned-badge">✅ Есть</div>
               ) : (
                 <button
@@ -149,7 +177,7 @@ function Pets({ onUpdate }: { onUpdate: () => void }) {
                   onClick={() => buy(item.type)}
                   disabled={buying}
                 >
-                  Приютить
+                  {ownedQty > 0 ? 'Купить ещё' : 'Приютить'}
                 </button>
               )}
             </div>

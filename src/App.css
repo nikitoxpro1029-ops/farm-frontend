@@ -25,12 +25,6 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 
-#root {
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100vw;
-}
-
 .app {
   max-width: 500px;
   margin: 0 auto;
@@ -41,11 +35,16 @@ html, body {
   box-sizing: border-box;
 }
 
+/* ============ HEADER ============ */
 .header {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
 }
+
 .header h1 { font-size: 24px; }
+
 .balance {
   background: #2d2d44;
   padding: 8px 14px;
@@ -58,19 +57,134 @@ html, body {
   font-size: 15px;
 }
 
-.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-.tabs button {
-  flex: 1; padding: 12px; border: none; border-radius: 12px;
-  background: #2d2d44; color: #fff; font-size: 14px; cursor: pointer;
+/* ============ TABS ============ */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  width: 100%;
 }
-.tabs button.active { background: #4caf50; font-weight: bold; }
 
-.crops-grid, .seeds-grid, .packs-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+.tabs button {
+  flex: 1;
+  padding: 10px 4px;
+  border: none;
+  border-radius: 10px;
+  background: #2d2d44;
+  color: #fff;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.tabs button.active {
+  background: #4caf50;
+  font-weight: bold;
+}
+
+/* ============ SUBTABS ============ */
+.subtabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.subtabs button {
+  flex: 1;
+  padding: 10px 8px;
+  background: #2d2d44;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subtabs button.active {
+  background: #4caf50;
+  font-weight: bold;
+}
+
+/* ============ COMMON ============ */
+.empty {
+  text-align: center;
+  color: #888;
+  grid-column: 1 / -1;
+  padding: 32px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ============ FARM ============ */
+.plots-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2d2d44;
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.plots-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.plots-count {
+  font-size: 16px;
+  font-weight: bold;
+  color: #8bc34a;
+}
+
+.plots-label {
+  font-size: 11px;
+  color: #888;
+}
+
+.buy-plot-btn {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.buy-plot-btn:active { transform: scale(0.96); }
+
+.buy-plot-price {
+  font-size: 12px;
+  color: #ffd700;
+}
+
+.crops-grid,
+.seeds-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   margin-bottom: 24px;
 }
 
-.crop-card {
+.crop-card,
+.seed-card {
   background: linear-gradient(180deg, #2d2d44 0%, #232336 100%);
   border-radius: 16px;
   padding: 14px;
@@ -78,6 +192,7 @@ html, body {
   border: 2px solid transparent;
   position: relative;
   overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .crop-card::before {
@@ -86,15 +201,40 @@ html, body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 40%;
-  background: linear-gradient(180deg, transparent 0%, rgba(139, 90, 43, 0.08) 100%);
+  height: 30%;
+  background: linear-gradient(180deg, transparent 0%, rgba(76, 175, 80, 0.05) 100%);
   pointer-events: none;
 }
 
 .crop-card.common, .seed-card.common { border-color: #9e9e9e; }
+.crop-card.uncommon, .seed-card.uncommon { border-color: #4caf50; }
 .crop-card.rare, .seed-card.rare { border-color: #2196f3; }
 .crop-card.epic, .seed-card.epic { border-color: #9c27b0; }
 .crop-card.legendary, .seed-card.legendary { border-color: #ff9800; }
+.crop-card.mythic, .seed-card.mythic {
+  border-color: #e91e63;
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.6);
+}
+
+.crop-image,
+.seed-image,
+.barn-icon,
+.craft-icon,
+.craft-ing-icon,
+.roulette-icon,
+.result-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crop-image { min-height: 60px; }
+.seed-image { min-height: 52px; }
+.barn-icon { min-height: 60px; }
+.craft-icon { min-height: 60px; }
+.roulette-icon { min-height: 60px; }
+.result-image { min-height: 110px; }
+.craft-ing-icon { width: 32px; height: 32px; flex-shrink: 0; }
 
 .crop-image > div {
   transition: transform 0.6s ease, opacity 0.6s ease;
@@ -103,38 +243,511 @@ html, body {
   justify-content: center;
 }
 
-.harvest-btn, .plant-btn, .pack-card button {
-  background: #4caf50; color: #fff; border: none;
-  padding: 8px 16px; border-radius: 8px; cursor: pointer;
-  font-size: 13px; margin-top: 8px; width: 100%;
+.crop-icon-img,
+.seed-icon-img {
+  margin: 0 auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
+
+.crop-image img,
+.seed-image img,
+.barn-icon img,
+.craft-icon img,
+.craft-ing-icon img,
+.roulette-icon img,
+.result-image img {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.crop-sprout {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.crop-name, .seed-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.seed-qty {
+  color: #ffd700;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* Вода на грядке */
+.crop-water-bar {
+  width: 100%;
+  height: 6px;
+  background: #1a1a2e;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 6px 0 4px;
+  border: 1px solid #3a3a55;
+  position: relative;
+}
+
+.crop-water-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #03a9f4, #4fc3f7);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.crop-water-fill.low {
+  background: linear-gradient(90deg, #f44336, #ff9800);
+  animation: water-low-blink 1.5s infinite;
+}
+
+.crop-water-fill.thirsty {
+  background: linear-gradient(90deg, #d32f2f, #f44336);
+  animation: thirsty-blink 0.8s infinite;
+}
+
+@keyframes water-low-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes thirsty-blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #f44336; }
+  50% { opacity: 0.6; box-shadow: 0 0 12px #f44336; }
+}
+
+.crop-water-warning {
+  position: absolute;
+  right: -4px;
+  top: -8px;
+  font-size: 14px;
+  animation: warning-shake 0.5s infinite;
+  z-index: 5;
+}
+
+@keyframes warning-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.crop-quality {
+  font-size: 10px;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+
+.crop-streak {
+  font-size: 10px;
+  color: #ff5722;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.crop-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #1a1a2e;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+  border: 1px solid #3a3a55;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.crop-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a, #cddc39);
+  border-radius: 8px;
+  transition: width 1s linear;
+  box-shadow: 0 0 8px rgba(139, 195, 74, 0.7);
+}
+
+.crop-progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #ccc;
+}
+
+.crop-progress-percent {
+  color: #8bc34a;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.crop-timer { margin-top: 8px; }
+
+.harvest-btn, .plant-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 8px;
+  width: 100%;
+}
+
 .harvest-btn { background: #ff9800; }
+
+.water-btn {
+  background: linear-gradient(135deg, #03a9f4, #4fc3f7);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 6px 0;
+  width: 100%;
+}
+
+.water-btn:active { transform: scale(0.96); }
+
+.fertilize-btn {
+  background: linear-gradient(135deg, #9c27b0, #e91e63);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 6px 0;
+  width: 100%;
+}
+
+.fertilize-btn:active { transform: scale(0.96); }
+
+.fertilized-badge {
+  background: linear-gradient(135deg, #9c27b0, #e91e63);
+  color: #fff;
+  font-size: 11px;
+  padding: 6px 8px;
+  border-radius: 6px;margin: 6px 0;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(233, 30, 99, 0.5);
+}
+
+.crop-expire {
+  font-size: 10px;
+  color: #ff9800;
+  margin-top: 6px;
+  font-weight: bold;
+}
+
+.crop-expire.urgent {
+  color: #e91e63;
+  animation: urgent-blink 1s infinite;
+}
+
+@keyframes urgent-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Анимации сбора */
+.crop-card.ready {
+  animation: crop-ready-pulse 2s ease-in-out infinite;
+}
+
+@keyframes crop-ready-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(76, 175, 80, 0); }
+  50% { box-shadow: 0 0 20px rgba(139, 195, 74, 0.6); }
+}
+
+.crop-card.harvesting {
+  animation: card-shake 0.5s ease-out;
+}
+
+@keyframes card-shake {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.05); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.harvest-effect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+.coin-fly {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 24px;
+  transform: translate(-50%, -50%);
+  animation: coin-fly-up 1.2s ease-out forwards;
+  filter: drop-shadow(0 0 6px #ffd700);
+}
+
+.coin-1 { animation-delay: 0s; margin-left: -30px; }
+.coin-2 { animation-delay: 0.1s; margin-left: -10px; }
+.coin-3 { animation-delay: 0.2s; margin-left: 10px; }
+.coin-4 { animation-delay: 0.3s; margin-left: 30px; }
+.coin-5 { animation-delay: 0.4s; margin-left: 0; }
+
+@keyframes coin-fly-up {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, -150px) scale(0.8); }
+}
+
+/* ============ BARN ============ */
+.barn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  background: #2d2d44;
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+
+.sell-all-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.barn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.barn-card {
+  background: #2d2d44;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.barn-card.common { border-color: #9e9e9e; }
+.barn-card.uncommon { border-color: #4caf50; }
+.barn-card.rare { border-color: #2196f3; }
+.barn-card.epic { border-color: #9c27b0; }
+.barn-card.legendary { border-color: #ff9800; }
+.barn-card.mythic {
+  border-color: #e91e63;
+  box-shadow: 0 0 15px rgba(233, 30, 99, 0.6);
+}
+
+.barn-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.barn-qty {
+  color: #ffd700;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.barn-price {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.barn-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.barn-actions button {
+  flex: 1;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* ============ CRAFT ============ */
+.craft-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.craft-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.craft-card {
+  background: #2d2d44;
+  border-radius: 16px;
+  padding: 14px;
+  border: 2px solid #9c27b0;
+}
+
+.craft-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #3a3a55;
+}
+
+.craft-name {
+  flex: 1;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.craft-price {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.craft-ingredients {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.craft-ing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1a1a2e;
+  font-size: 12px;
+}
+
+.craft-ing.ok { border-left: 3px solid #4caf50; }
+.craft-ing.miss { border-left: 3px solid #e91e63; }
+
+.craft-ing-name { flex: 1; }
+.craft-ing-count { font-weight: bold; }
+
+.craft-ing.ok .craft-ing-count { color: #4caf50; }
+.craft-ing.miss .craft-ing-count { color: #e91e63; }
+
+.craft-btn {
+  width: 100%;
+  padding: 12px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.craft-btn:disabled {
+  background: #555;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============ PACKS / ROULETTE ============ */
+.packs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pack-card {
+  background: #2d2d44;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+}
+
+.pack-card.common { border-color: #9e9e9e; }
+.pack-card.rare { border-color: #2196f3; }
+.pack-card.legendary { border-color: #ff9800; box-shadow: 0 0 15px rgba(255, 152, 0, 0.4); }
+
+.pack-card h3 {
+  font-size: 15px;
+  margin: 8px 0 6px;
+  line-height: 1.2;
+}
+
+.pack-desc {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0 0 8px;
+  flex-grow: 1;
+}
+
+.pack-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.pack-image {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 56px;
+  line-height: 1;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pack-card button {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 8px;
+  width: 100%;
+}
+
 .pack-card button:disabled { opacity: 0.5; }
 
-.pack-result-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-  display: flex; align-items: center; justify-content: center; z-index: 100;
-}
-.pack-result {
-  background: #2d2d44; padding: 32px; border-radius: 24px;
-  text-align: center; border: 3px solid #4caf50; max-width: 300px;
-}
-.pack-result.legendary { border-color: #ff9800; }
-.pack-result .result-image { font-size: 64px; margin-bottom: 16px; }
-.pack-result button {
-  background: #4caf50; color: #fff; border: none;
-  padding: 12px 32px; border-radius: 12px; margin-top: 16px;
-  cursor: pointer; font-size: 16px;
-}
-
-.empty { text-align: center; color: #888; grid-column: 1 / -1; padding: 32px; }
-/* Новые редкости */
-.crop-card.uncommon, .seed-card.uncommon { border-color: #4caf50; }
-.crop-card.mythic, .seed-card.mythic { 
-  border-color: #e91e63;
-  box-shadow: 0 0 20px rgba(233, 30, 99, 0.6);
-}
-/* Рулетка открытия пака */
+/* Рулетка */
 .roulette-wrapper {
   position: relative;
   margin: 20px 0 40px;
@@ -186,9 +799,9 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   border: 2px solid transparent;
-  padding: 12px;
+  padding: 8px;
   text-align: center;
   box-sizing: border-box;
   overflow: hidden;
@@ -204,195 +817,62 @@ html, body {
   box-shadow: 0 0 15px rgba(233, 30, 99, 0.7);
 }
 
-
-
 .roulette-name {
   font-size: 11px;
   font-weight: 600;
   color: #fff;
-  line-height: 1.2;
-  padding: 0 4px;
+  line-height: 1.1;
+  max-width: 104px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
 }
 
-.roulette-reel.spinning .roulette-item {
-  filter: blur(0.6px);
-}
-
-.roulette-reel:not(.spinning) .roulette-item:nth-child(46) {
-  animation: winner-glow 0.6s ease-out;
-}
-
-@keyframes winner-glow {
-  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
-  50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
-  100% { transform: scale(1); }
-}
-/* Шрифты для эмодзи */
-.roulette-icon,
-.crop-image,
-.seed-image,
-.result-image {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", sans-serif;
-}
-
-.roulette-icon {
-  font-size: 40px;
-  line-height: 1;
-  height: 48px;
+/* Модалка результата пака */
+.pack-result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
-.crop-image {
-  font-size: 44px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.pack-result {
+  background: #2d2d44;
+  padding: 32px;
+  border-radius: 24px;
+  text-align: center;
+  border: 3px solid #4caf50;
+  max-width: 300px;
 }
 
-.seed-image {
-  font-size: 36px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.pack-result.legendary { border-color: #ff9800; }
+.pack-result.mythic { border-color: #e91e63; }
 
-.result-image {
+.pack-result .result-image {
   font-size: 64px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.pack-card {
-  background: #2d2d44;
-  border-radius: 16px;
-  padding: 16px;
-  text-align: center;
-  border: 2px solid transparent;
-  display: flex;
-  flex-direction: column;
-  min-height: 260px;
-}
-
-.pack-card.common { border-color: #9e9e9e; }
-.pack-card.rare { border-color: #2196f3; }
-.pack-card.legendary { border-color: #ff9800; box-shadow: 0 0 15px rgba(255, 152, 0, 0.4); }
-
-.pack-card h3 {
-  font-size: 15px;
-  margin: 8px 0 6px;
-  line-height: 1.2;
-}
-
-.pack-desc {
-  font-size: 12px;
-  color: #aaa;
-  margin: 0 0 8px;
-  flex-grow: 1;
-}
-
-
-
-.pack-image {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 56px;
-  line-height: 1;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}/* Амбар */
-.barn-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 16px;
-  background: #2d2d44;
-  padding: 12px 16px;
+}.pack-result h3 { font-size: 16px; margin-bottom: 12px; }
+.pack-result .result-name { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+.pack-result .result-rarity { color: #888; margin-bottom: 16px; }
+
+.pack-result button {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
   border-radius: 12px;
-}
-
-.sell-all-btn {
-  background: #4caf50;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  margin-top: 16px;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 16px;
 }
 
-.barn-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.barn-card {
-  background: #2d2d44;
-  border-radius: 16px;
-  padding: 12px;
-  text-align: center;
-  border: 2px solid transparent;
-}
-
-.barn-card.common { border-color: #9e9e9e; }
-.barn-card.uncommon { border-color: #4caf50; }
-.barn-card.rare { border-color: #2196f3; }
-.barn-card.epic { border-color: #9c27b0; }
-.barn-card.legendary { border-color: #ff9800; }
-.barn-card.mythic {
-  border-color: #e91e63;
-  box-shadow: 0 0 15px rgba(233, 30, 99, 0.6);
-}
-
-.barn-icon {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 40px;
-  line-height: 1;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.barn-name {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.barn-qty {
-  color: #ffd700;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-
-
-.barn-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.barn-actions button {
-  flex: 1;
-  background: #4caf50;
-  color: #fff;
-  border: none;
-  padding: 6px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  cursor: pointer;
-}/* Ежедневный бонус */
+/* ============ BONUS ============ */
 .bonus-subtitle {
   text-align: center;
   font-size: 14px;
@@ -400,9 +880,7 @@ html, body {
   margin-bottom: 16px;
 }
 
-.bonus-subtitle strong {
-  color: #ffd700;
-}
+.bonus-subtitle strong { color: #ffd700; }
 
 .bonus-days {
   display: grid;
@@ -482,9 +960,7 @@ html, body {
   margin-bottom: 12px;
 }
 
-.claim-btn:disabled {
-  opacity: 0.5;
-}
+.claim-btn:disabled { opacity: 0.5; }
 
 .bonus-waiting {
   text-align: center;
@@ -506,98 +982,9 @@ html, body {
 @keyframes bonus-pulse {
   0%, 100% { box-shadow: 0 0 12px rgba(255, 215, 0, 0.5); }
   50% { box-shadow: 0 0 24px rgba(255, 215, 0, 0.9); }
-}/* Крафт */
-.craft-hint {
-  text-align: center;
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 16px;
 }
 
-.craft-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.craft-card {
-  background: #2d2d44;
-  border-radius: 16px;
-  padding: 14px;
-  border: 2px solid #9c27b0;
-}
-
-.craft-result {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #3a3a55;
-}
-
-.craft-icon {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 36px;
-  line-height: 1;
-}
-
-.craft-name {
-  flex: 1;
-  font-weight: bold;
-  font-size: 15px;
-}
-
-
-
-.craft-ingredients {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.craft-ing {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: #1a1a2e;
-  font-size: 12px;
-}
-
-.craft-ing.ok { border-left: 3px solid #4caf50; }
-.craft-ing.miss { border-left: 3px solid #e91e63; }
-
-.craft-ing-icon {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 20px;
-}
-
-.craft-ing-name { flex: 1; }
-.craft-ing-count { font-weight: bold; }
-
-.craft-ing.ok .craft-ing-count { color: #4caf50; }
-.craft-ing.miss .craft-ing-count { color: #e91e63; }
-
-.craft-btn {
-  width: 100%;
-  padding: 12px;
-  background: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.craft-btn:disabled {
-  background: #555;
-  opacity: 0.6;
-  cursor: not-allowed;
-}/* Лидерборд */
+/* ============ LEADERBOARD ============ */
 .leaderboard-hint {
   text-align: center;
   font-size: 12px;
@@ -653,10 +1040,7 @@ html, body {
   font-size: 24px;
 }
 
-.player-info {
-  flex: 1;
-  overflow: hidden;
-}
+.player-info { flex: 1; overflow: hidden; }
 
 .player-name {
   font-weight: bold;
@@ -681,287 +1065,227 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.barn-price,
-.craft-price,
-.pack-price,
 .player-balance {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 4px;
 }
-.subtabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+
+/* ============ REFERRAL ============ */
+.referral-card {display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(135deg, #9c27b0, #673ab7);
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 20px rgba(156, 39, 176, 0.4);
 }
 
-.subtabs button {
-  flex: 1;
-  padding: 10px 12px;
-  background: #2d2d44;
+.referral-text { flex: 1; }
+
+.referral-title {
+  font-size: 14px;
+  font-weight: bold;
   color: #fff;
+  margin-bottom: 3px;
+}
+
+.referral-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.referral-btn {
+  background: #fff;
+  color: #9c27b0;
   border: none;
+  padding: 10px 16px;
   border-radius: 10px;
   font-size: 13px;
-  cursor: pointer;
-}
-
-.subtabs button.active {
-  background: #4caf50;
-  font-weight: bold;
-}.crop-expire {
-  font-size: 10px;
-  color: #ff9800;
-  margin-top: 6px;
-  font-weight: bold;
-}
-
-.crop-expire.urgent {
-  color: #e91e63;
-  animation: urgent-blink 1s infinite;
-}
-
-@keyframes urgent-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}/* Прогресс-бар роста */
-
-
-.crop-progress-bar {
-  width: 100%;
-  height: 12px;
-  background: #1a1a2e;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 10px;
-  border: 1px solid #3a3a55;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.crop-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4caf50, #8bc34a, #cddc39);
-  border-radius: 8px;
-  transition: width 1s linear;
-  box-shadow: 0 0 8px rgba(139, 195, 74, 0.7);
-}
-
-.crop-progress-text {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 4px;
-  font-size: 11px;
-  color: #ccc;
-}
-
-.crop-progress-percent {
-  color: #8bc34a;
-  font-weight: bold;
-  font-size: 11px;
-}/* Анимации грядок */
-.crop-card {
-  position: relative;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.crop-card.ready {
-  animation: crop-ready-pulse 2s ease-in-out infinite;
-}
-
-@keyframes crop-ready-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 rgba(76, 175, 80, 0);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(139, 195, 74, 0.6);
-  }
-}
-
-.crop-card.harvesting {
-  animation: card-shake 0.5s ease-out;
-}
-
-@keyframes card-shake {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.05); }
-  50% { transform: scale(0.98); }
-  100% { transform: scale(1); }
-}
-
-.harvest-effect {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: visible;
-  z-index: 10;
-}
-
-.coin-fly {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-size: 24px;
-  transform: translate(-50%, -50%);
-  animation: coin-fly-up 1.2s ease-out forwards;
-  filter: drop-shadow(0 0 6px #ffd700);
-}
-
-.coin-1 { animation-delay: 0s; margin-left: -30px; }
-.coin-2 { animation-delay: 0.1s; margin-left: -10px; }
-.coin-3 { animation-delay: 0.2s; margin-left: 10px; }
-.coin-4 { animation-delay: 0.3s; margin-left: 30px; }
-.coin-5 { animation-delay: 0.4s; margin-left: 0; }
-
-@keyframes coin-fly-up {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-  }
-  20% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -150px) scale(0.8);
-  }
-}
-
-/* Плавное появление ростка при посадке */
-.crop-image {
-  animation: seed-pop 0.5s ease-out;
-}
-
-@keyframes seed-pop {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.harvest-btn {
-  animation: harvest-btn-glow 2s ease-in-out infinite;
-}
-
-@keyframes harvest-btn-glow {
-  0%, 100% {
-    box-shadow: 0 0 8px rgba(255, 152, 0, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 18px rgba(255, 152, 0, 0.9);
-  }
-}/* Шапка грядок */
-.plots-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #2d2d44;
-  padding: 12px 16px;
-  border-radius: 14px;
-  margin-bottom: 16px;
-  gap: 12px;
-}
-
-.plots-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.plots-count {
-  font-size: 16px;
-  font-weight: bold;
-  color: #8bc34a;
-}
-
-.plots-label {
-  font-size: 11px;
-  color: #888;
-}
-
-.buy-plot-btn {
-  background: linear-gradient(135deg, #4caf50, #8bc34a);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 12px;
   font-weight: bold;
   cursor: pointer;
-  text-align: center;
-  line-height: 1.3;
   white-space: nowrap;
 }
 
-.buy-plot-btn:active {
-  transform: scale(0.96);
+.referral-btn:active { transform: scale(0.95); }
+
+/* ============ AUTOWATER ============ */
+.autowater-banner {
+  background: linear-gradient(135deg, #03a9f4, #0288d1);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  box-shadow: 0 0 15px rgba(3, 169, 244, 0.4);
 }
 
-.buy-plot-price {
-  font-size: 12px;
-  color: #ffd700;
-}/* Полоса воды на грядке */
-.crop-water-bar {
+.buy-autowater-btn {
   width: 100%;
-  height: 6px;
-  background: #1a1a2e;
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 6px 0 4px;
-  border: 1px solid #3a3a55;
-}
-
-.crop-water-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #03a9f4, #4fc3f7);
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-
-.crop-water-fill.low {
-  background: linear-gradient(90deg, #f44336, #ff9800);
-  animation: water-low-blink 1.5s infinite;
-}
-
-@keyframes water-low-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.crop-quality {
-  font-size: 10px;
-  color: #ffd700;
-  margin-bottom: 4px;
-}
-
-/* Кнопка полива */
-.water-btn {
   background: linear-gradient(135deg, #03a9f4, #4fc3f7);
   color: #fff;
   border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.buy-autowater-btn:active { transform: scale(0.98); }
+
+/* ============ PETS ============ */
+.pets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pet-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #2d2d44, #3a3a55);
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+}
+
+.pet-card.cat { border-color: #ff9800; }
+.pet-card.dog { border-color: #8bc34a; }
+.pet-card.chicken { border-color: #ffc107; }
+.pet-card.cow { border-color: #9e9e9e; }
+
+.pet-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.pet-info { flex: 1; }
+
+.pet-name {
+  font-weight: bold;
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.pet-qty {
+  color: #4caf50;
+  font-weight: bold;
+  font-size: 14px;
+  margin-left: 4px;
+}
+
+.pet-status {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.pet-collect-btn {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;
-  margin: 6px 0;
-  width: 100%;
+  white-space: nowrap;
+  animation: pet-pulse 1.5s infinite;
 }
 
-.water-btn:active {
-  transform: scale(0.96);
+@keyframes pet-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(76, 175, 80, 0.6); }
+  50% { box-shadow: 0 0 16px rgba(76, 175, 80, 1); }
 }
 
-/* Мини-игра */
+.pets-shop {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.pet-shop-card {
+  background: #2d2d44;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pet-shop-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.pet-shop-name {
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.pet-shop-owned {
+  background: #4caf50;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 4px auto;
+}
+
+.pet-shop-desc {
+  font-size: 10px;
+  color: #888;
+  min-height: 24px;
+}
+
+.pet-shop-price {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.pet-buy-btn {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.pet-buy-btn:disabled { opacity: 0.5; }
+
+.pet-owned-badge {
+  background: #4caf50;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* ============ WATER GAME ============ */
 .water-game-overlay {
   position: fixed;
   inset: 0;
@@ -993,9 +1317,7 @@ html, body {
   border-bottom: 1px solid rgba(3, 169, 244, 0.3);
 }
 
-.water-game-score {
-  color: #fff;
-}
+.water-game-score { color: #fff; }
 
 .water-game-area {
   position: relative;
@@ -1024,9 +1346,7 @@ html, body {
   transform: translate(-50%, -50%);
 }
 
-.water-bubble:active {
-  transform: scale(0.9);
-}
+.water-bubble:active { transform: scale(0.9); }
 
 @keyframes bubble-pop {
   0% { transform: scale(0); opacity: 0; }
@@ -1091,321 +1411,10 @@ html, body {
   border: none;
   font-size: 13px;
   cursor: pointer;
-}/* Индикатор жажды */
-.crop-water-bar {
-  position: relative;
 }
 
-.crop-water-fill.thirsty {
-  background: linear-gradient(90deg, #d32f2f, #f44336);
-  animation: thirsty-blink 0.8s infinite;
-}
-
-@keyframes thirsty-blink {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px #f44336; }
-  50% { opacity: 0.6; box-shadow: 0 0 12px #f44336; }
-}
-
-.crop-water-warning {
-  position: absolute;
-  right: -4px;
-  top: -8px;
-  font-size: 14px;
-  animation: warning-shake 0.5s infinite;
-  z-index: 5;
-}
-
-@keyframes warning-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
-}/* Удобрения */
-.fertilize-btn {
-  background: linear-gradient(135deg, #9c27b0, #e91e63);
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 6px 0;
-  width: 100%;
-}
-
-.fertilize-btn:active {
-  transform: scale(0.96);
-}
-
-.fertilized-badge {
-  background: linear-gradient(135deg, #9c27b0, #e91e63);
-  color: #fff;
-  font-size: 11px;
-  padding: 6px 8px;
-  border-radius: 6px;
-  margin: 6px 0;
-  font-weight: bold;
-  text-align: center;
-  box-shadow: 0 0 12px rgba(233, 30, 99, 0.5);
-}
-
-/* Автополив */
-.autowater-banner {
-  background: linear-gradient(135deg, #03a9f4, #0288d1);
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 12px;
-  box-shadow: 0 0 15px rgba(3, 169, 244, 0.4);
-}
-
-.buy-autowater-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #03a9f4, #4fc3f7);
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-
-.buy-autowater-btn:active {
-  transform: scale(0.98);
-}/* Реферальная карточка */
-.referral-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: linear-gradient(135deg, #9c27b0, #673ab7);
-  padding: 14px 16px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  box-shadow: 0 0 20px rgba(156, 39, 176, 0.4);
-}
-
-.referral-text {
-  flex: 1;
-}
-
-.referral-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: #fff;
-  margin-bottom: 3px;
-}
-
-.referral-sub {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.referral-btn {
-  background: #fff;
-  color: #9c27b0;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: bold;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.referral-btn:active {
-  transform: scale(0.95);
-}/* Питомцы */
-.pets-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.pet-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #2d2d44, #3a3a55);
-  padding: 14px;
-  border-radius: 14px;
-  border: 2px solid transparent;
-}
-
-.pet-card.cat { border-color: #ff9800; }
-.pet-card.dog { border-color: #8bc34a; }
-.pet-card.chicken { border-color: #ffc107; }
-
-.pet-icon {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 40px;
-  line-height: 1;
-}
-
-.pet-info {
-  flex: 1;
-}
-
-.pet-name {
-  font-weight: bold;
-  font-size: 15px;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.pet-status {
-  font-size: 12px;
-  color: #ccc;
-}
-
-.pet-collect-btn {
-  background: linear-gradient(135deg, #4caf50, #8bc34a);
-  color: #fff;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: bold;
-  cursor: pointer;
-  white-space: nowrap;
-  animation: pet-pulse 1.5s infinite;
-}
-
-@keyframes pet-pulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(76, 175, 80, 0.6); }
-  50% { box-shadow: 0 0 16px rgba(76, 175, 80, 1); }
-}
-
-.pets-shop {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.pet-shop-card {
-  background: #2d2d44;
-  border-radius: 14px;
-  padding: 14px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.pet-shop-icon {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 48px;
-  line-height: 1;
-}
-
-.pet-shop-name {
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.pet-shop-desc {
-  font-size: 10px;
-  color: #888;
-  min-height: 24px;
-}
-
-.pet-shop-price {
-  color: #ffd700;
-  font-weight: bold;
-  font-size: 13px;
-}
-
-.pet-buy-btn {
-  background: linear-gradient(135deg, #4caf50, #8bc34a);
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 4px;
-}
-
-.pet-buy-btn:disabled {
-  opacity: 0.5;
-}
-
-.pet-owned-badge {
-  background: #4caf50;
-  color: #fff;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 4px;
-}/* Картиночные иконки культур */
-.crop-image,
-.seed-image,
-.barn-icon,
-.craft-icon,
-.craft-ing-icon,
-.roulette-icon,
-.result-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.crop-image img,
-.seed-image img,
-.barn-icon img,
-.craft-icon img,
-.craft-ing-icon img,
-.roulette-icon img,
-.result-image img {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
-}
-
-.crop-image {
-  min-height: 60px;
-}
-
-.seed-image {
-  min-height: 52px;
-}
-
-.barn-icon {
-  min-height: 60px;
-}
-
-.craft-icon {
-  min-height: 60px;
-}
-
-.roulette-icon {
-  min-height: 60px;
-}
-
-.result-image {
-  min-height: 110px;
-}
-
-.craft-ing-icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-}
-
-.crop-sprout {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 48px;
-  line-height: 1;
-}/* Memory игра */
-.memorygame {
-  padding: 8px;
-}
+/* ============ MEMORY GAME ============ */
+.memorygame { padding: 8px; }
 
 .memory-grid {
   display: grid;
@@ -1427,9 +1436,7 @@ html, body {
   padding: 4px;
 }
 
-.memory-card:active {
-  transform: scale(0.95);
-}
+.memory-card:active { transform: scale(0.95); }
 
 .memory-card.open {
   background: linear-gradient(135deg, #1e3a1f, #2d2d44);
@@ -1441,4 +1448,87 @@ html, body {
   font-size: 28px;
   color: #666;
   font-weight: bold;
+}
+
+/* ============ MINI-GAME HEADER ============ */
+.minigame { padding: 8px; }
+
+.minigame-hint {
+  text-align: center;
+  color: #ccc;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.minigame-start {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.minigame-btn {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: #fff;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.minigame-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #2d2d44;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.minigame-area {
+  position: relative;
+  height: 450px;
+  background: linear-gradient(180deg, #0f2440 0%, #05101f 100%);
+  border-radius: 16px;
+  border: 2px solid #4caf50;
+  overflow: hidden;
+}
+
+.minigame-result {
+  text-align: center;
+  padding: 32px;
+  background: #2d2d44;
+  border-radius: 16px;
+  border: 2px solid #4caf50;
+}
+
+.minigame-score {
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.minigame-score strong {
+  color: #fff;font-size: 22px;
+}
+
+.minigame-reward {
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.minigame-reward strong {
+  color: #ffd700;
+  font-size: 24px;
+}
+
+.minigame-bonus {
+  color: #ffd700;
+  font-weight: bold;
+  margin-bottom: 16px;
+  font-size: 14px;
 }
