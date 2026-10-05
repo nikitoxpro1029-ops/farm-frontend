@@ -25,6 +25,7 @@ const ICONS: Record<string, string> = {
   'Syr': '🧀',
   'Chizkeyk': '🍰',
   'MolokoKoktel': '🥤',
+  'MorkovnyiPirog': '🥧',
 };
 
 const NAME_MAP: Record<string, string> = {
@@ -54,6 +55,7 @@ const NAME_MAP: Record<string, string> = {
   'Сыр': 'Syr',
   'Чизкейк': 'Chizkeyk',
   'Молочный коктейль': 'MolokoKoktel',
+  'Морковный пирог': 'MorkovnyiPirog',
 };
 
 export const getSeedIcon = (name: string): string => {
