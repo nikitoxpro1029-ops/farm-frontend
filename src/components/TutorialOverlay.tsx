@@ -15,9 +15,10 @@ interface TutorialState {
 interface TutorialOverlayProps {
   onAdvance: () => void;
   onComplete: () => void;
+  activeTab: string;
 }
 
-function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
+function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayProps) {
   const [state, setState] = useState<TutorialState | null>(null);
   const [loading, setLoading] = useState(true);
   const [advancing, setAdvancing] = useState(false);
@@ -103,14 +104,18 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
   if (state.skipped || state.completed) return null;
   if (!state.dialog) return null;
 
-  // Свёрнутый вид — маленькая плашка в углу
-  if (collapsed) {
+ // Автосворачивание: пока игрок на вкладке Паки и шаг — action,
+  // не разворачиваем модалку, чтобы не перебивать рулетку.
+  const shouldAutoCollapse = state.mode === 'action' && activeTab === 'packs';
+
+  if (collapsed || shouldAutoCollapse) {
     return (
       <div className="tutorial-mini" onClick={() => setCollapsed(false)}>
         👴 Подсказка Деда
       </div>
     );
   }
+  
 
   const progressPercent = Math.round((state.step / state.totalSteps) * 100);
   const isAction = state.mode === 'action';
