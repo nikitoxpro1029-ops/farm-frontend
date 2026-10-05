@@ -2059,4 +2059,139 @@ h2 {
 
 .cooking-cancel-btn:active {
   color: #fff;
+}/* ============================================
+   📋 ЕЖЕДНЕВНЫЕ ЗАДАНИЯ
+   ============================================ */
+
+.quests {
+  padding: 4px 0;
+}
+
+.quests-hint {
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+  margin: 8px 0 16px;
+  line-height: 1.4;
+}
+
+.quests-done-banner {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #fff;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  margin-bottom: 16px;
+  box-shadow: 0 0 24px rgba(46, 204, 113, 0.4);
+}
+
+.quests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quest-card {
+  background: #2d2d44;
+  border: 2px solid #444;
+  border-radius: 16px;
+  padding: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.quest-card.ready {
+  border-color: #4caf50;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.35);
+}
+
+.quest-card.claimed {
+  opacity: 0.55;
+  border-color: #555;
+}
+
+.quest-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.quest-progress-bar {
+  height: 12px;
+  background: #1a1a2e;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.quest-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #2ecc71);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.quest-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.quest-progress-text {
+  font-weight: 700;
+  color: #4caf50;
+}
+
+.quest-rewards {
+  color: #f0c419;
+  font-weight: 600;
+}
+
+.quest-claim-btn {
+  width: 100%;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #2e7d32;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.quest-claim-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 #2e7d32;
+}
+
+.quest-claim-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.quest-claimed-badge {
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  background: #1a1a2e;
+  border-radius: 12px;
+  color: #4caf50;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.quest-pending {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  color: #888;
+  font-size: 13px;
 }

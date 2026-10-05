@@ -5,6 +5,7 @@ import Pets from './Pets';
 import Bonus from './Bonus';
 import CropIcon from './CropIcon';
 import CookingGame from './CookingGame';
+import Quests from './Quests';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -45,7 +46,7 @@ function Barn({ onSell }: BarnProps) {
   const [loading, setLoading] = useState(true);
   const [crafting, setCrafting] = useState<number | null>(null);
   const [cookingRecipe, setCookingRecipe] = useState<Recipe | null>(null);
-  const [subTab, setSubTab] = useState<'items' | 'craft' | 'pets' | 'bonus'>('items');
+  const [subTab, setSubTab] = useState<'items' | 'craft' | 'pets' | 'bonus' | 'quests'>('items');
   const tg = (window as any).Telegram?.WebApp;
 
   useEffect(() => {
@@ -96,13 +97,11 @@ function Barn({ onSell }: BarnProps) {
     }
   };
 
-  // Открыть мини-игру
   const startCooking = (recipe: Recipe) => {
     if (!recipe.canCraft) return;
     setCookingRecipe(recipe);
   };
 
-  // Мини-игра завершена — отправляем крафт с множителем
   const finishCooking = async (multiplier: number) => {
     if (!cookingRecipe) return;
     const recipeId = cookingRecipe.id;
@@ -152,9 +151,15 @@ function Barn({ onSell }: BarnProps) {
           Урожай
         </button>
         <button
-          className={subTab === 'craft' ? 'active' : ''}onClick={() => setSubTab('craft')}
+          className={subTab === 'craft' ? 'active' : ''}
+          onClick={() => setSubTab('craft')}
+        >🍳 Кухня
+        </button>
+        <button
+          className={subTab === 'quests' ? 'active' : ''}
+          onClick={() => setSubTab('quests')}
         >
-          🍳 Кухня
+          📋 Задания
         </button>
         <button
           className={subTab === 'pets' ? 'active' : ''}
@@ -251,6 +256,7 @@ function Barn({ onSell }: BarnProps) {
         </>
       )}
 
+      {subTab === 'quests' && <Quests onClaim={onSell} />}
       {subTab === 'pets' && <Pets onUpdate={onSell} />}
       {subTab === 'bonus' && <Bonus onClaim={onSell} />}
 
