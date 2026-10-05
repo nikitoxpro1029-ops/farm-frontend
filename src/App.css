@@ -2219,19 +2219,35 @@ h2 {
 
 .tabs button {
   position: relative;
-}/* Компактные под-вкладки Амбара, чтобы все 5 влезли */
+}/* Компактная шапка */
+.tabs {
+  gap: 4px;
+}
+
+.tabs button {
+  padding: 10px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* Компактные под-вкладки Амбара */
+.subtabs {
+  gap: 4px;
+}
+
 .subtabs button {
-  padding: 10px 8px;
-  font-size: 13px;
+  padding: 8px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
   flex: 1 1 0;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Компактная шапка, если вдруг у тебя 5 кнопок тоже обрезаются */
-.tabs button {
-  padding: 10px 8px;
-  font-size: 13px;
 }
