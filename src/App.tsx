@@ -225,18 +225,21 @@ function App() {
 
       <main className="content">
         {activeTab === 'farm' && (
-          <Farm
-            crops={crops}
-            seeds={seeds}
-            onPlant={plantSeed}
-            onHarvest={harvestCrop}
-            onWater={waterCrop}
-            onFertilize={fertilize}
-            plotsInfo={plotsInfo}
-            onBuyPlot={buyPlot}
-            autowater={autowater}
-            onBuyAutowater={buyAutowater}
-          />
+          
+           <Farm
+  crops={crops}
+  seeds={seeds}
+  onPlant={plantSeed}
+  onHarvest={harvestCrop}
+  onWater={waterCrop}
+  onFertilize={fertilize}
+  plotsInfo={plotsInfo}
+  onBuyPlot={buyPlot}
+  autowater={autowater}
+  onBuyAutowater={buyAutowater}
+  referralInfo={referralInfo}
+  onInvite={inviteFriend}
+/>
         )}
         {activeTab === 'packs' && <Packs onOpen={loadState} />}
         {activeTab === 'barn' && <Barn onSell={loadState} />}
