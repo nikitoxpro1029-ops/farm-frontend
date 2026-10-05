@@ -266,7 +266,7 @@ const loadBadge = async () => {
       )}
 
       <nav className="tabs">
-        <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>
+       <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>
   🏚 Амбар
   {questsBadge > 0 && <span className="tab-badge">{questsBadge}</span>}
 </button>
