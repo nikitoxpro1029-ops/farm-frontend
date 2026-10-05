@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSeedIcon } from '../seedIcons';
 import Pets from './Pets';
+import CropIcon from './CropIcon';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -156,7 +157,9 @@ function Barn({ onSell }: BarnProps) {
               <div className="barn-grid">
                 {items.map((item) => (
                   <div key={item.id} className={'barn-card ' + item.rarity}>
-                    <div className="barn-icon">{getSeedIcon(item.name)}</div>
+                   <div className="barn-icon">
+  <CropIcon name={item.name} size={56} />
+</div>
                     <div className="barn-name">{item.name}</div>
                     <div className="barn-qty">x{item.quantity}</div>
                     <div className="barn-price">💰 {item.sell_price} за шт</div>
@@ -181,7 +184,9 @@ function Barn({ onSell }: BarnProps) {
             {recipes.map((recipe) => (
               <div key={recipe.id} className={'craft-card ' + recipe.resultRarity}>
                 <div className="craft-result">
-                  <div className="craft-icon">{getSeedIcon(recipe.resultName)}</div>
+                 <div className="craft-icon">
+  <CropIcon name={recipe.resultName} size={56} />
+</div>
                   <div className="craft-name">{recipe.resultName}</div>
                   <div className="craft-price">💰 {recipe.resultPrice}</div>
                 </div>
@@ -189,7 +194,9 @@ function Barn({ onSell }: BarnProps) {
                 <div className="craft-ingredients">
                   {recipe.ingredients.map((ing, i) => (
                     <div key={i} className={'craft-ing' + (ing.enough ? ' ok' : ' miss')}>
-                      <span className="craft-ing-icon">{getSeedIcon(ing.name)}</span>
+                      <span className="craft-ing-icon">
+  <CropIcon name={ing.name} size={28} />
+</span>
                       <span className="craft-ing-name">{ing.name}</span>
                       <span className="craft-ing-count">
                         {ing.have}/{ing.needed}

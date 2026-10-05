@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getSeedIcon } from '../seedIcons';
 import WaterGame from './WaterGame';
+import CropIcon from './CropIcon';
 
 interface Crop {
   id: number;
@@ -132,7 +133,8 @@ function Farm({
           <div className="referral-text">
             <div className="referral-title">🎁 Пригласи друга</div>
             <div className="referral-sub">
-              {referralInfo.referralsCount > 0? 'Ты пригласил: ' + referralInfo.referralsCount + ' 👥'
+              {referralInfo.referralsCount > 0
+                ? 'Ты пригласил: ' + referralInfo.referralsCount + ' 👥'
                 : 'Пригласи друга — получи 500💰'}
             </div>
           </div>
@@ -182,7 +184,11 @@ function Farm({
             )}
 
             <div className="crop-image">
-              {isReady(crop.ready_at) ? getSeedIcon(crop.name) : '🌱'}
+              {isReady(crop.ready_at) ? (
+                <CropIcon name={crop.name} size={56} />
+              ) : (
+                <span className="crop-sprout">🌱</span>
+              )}
             </div>
             <div className="crop-name">{crop.name}</div>
 
@@ -246,8 +252,7 @@ function Farm({
                   <div
                     className={
                       'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')
-                    }
-                  >
+                    }>
                     {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось:{' '}
                     {getExpireTime(crop.expires_at)}
                   </div>
@@ -279,7 +284,9 @@ function Farm({
       <div className="seeds-grid">
         {seeds.map((seed) => (
           <div key={seed.id} className={'seed-card ' + seed.rarity}>
-            <div className="seed-image">{getSeedIcon(seed.name)}</div>
+            <div className="seed-image">
+              <CropIcon name={seed.name} size={48} />
+            </div>
             <div className="seed-name">{seed.name}</div>
             <div className="seed-qty">x{seed.quantity}</div>
             <button

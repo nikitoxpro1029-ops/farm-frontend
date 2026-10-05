@@ -1340,4 +1340,61 @@ html, body {
   font-size: 12px;
   font-weight: bold;
   margin-top: 4px;
+}/* Картиночные иконки культур */
+.crop-image,
+.seed-image,
+.barn-icon,
+.craft-icon,
+.craft-ing-icon,
+.roulette-icon,
+.result-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crop-image img,
+.seed-image img,
+.barn-icon img,
+.craft-icon img,
+.craft-ing-icon img,
+.roulette-icon img,
+.result-image img {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.crop-image {
+  min-height: 60px;
+}
+
+.seed-image {
+  min-height: 52px;
+}
+
+.barn-icon {
+  min-height: 60px;
+}
+
+.craft-icon {
+  min-height: 60px;
+}
+
+.roulette-icon {
+  min-height: 60px;
+}
+
+.result-image {
+  min-height: 110px;
+}
+
+.craft-ing-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.crop-sprout {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 48px;
+  line-height: 1;
 }
