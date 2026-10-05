@@ -7,6 +7,7 @@ import Leaderboard from './components/Leaderboard';
 import MemoryGame from './components/MemoryGame';
 import Coin from './components/Coin';
 import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx,  } from './Sounds';
+import Catalog from './components/Catalog';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -252,12 +253,13 @@ function App() {
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
         <button className={activeTab === 'top' ? 'active' : ''} onClick={() => setActiveTab('top')}>Топ</button>
         <button className={activeTab === 'game' ? 'active' : ''} onClick={() => setActiveTab('game')}>🎮 Игры</button>
+        <button className={activeTab === 'catalog' ? 'active' : ''} onClick={() => setActiveTab('catalog')}>📖</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
         <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>Паки</button>
       </nav>
 
       <main className="content">
-        {activeTab === 'farm' && (
+        {activeTab === 'catalog' && <Catalog />}{activeTab === 'farm' && (
           <Farm
             crops={crops}
             seeds={seeds}
