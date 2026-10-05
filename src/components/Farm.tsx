@@ -202,14 +202,15 @@ function Farm({
                   </div>
                 )}
 
-                <button
-                  className={'water-btn' + (wateringId === crop.id ? ' watering' : '')}
-                  onClick={() => handleWater(crop.id)}
-                  disabled={wateringId === crop.id}
-                >
-                  {wateringId === crop.id ? '💧 Поливаем...' : '💧 Полить'}
-                </button>
-
+                {crop.water_level < 100 && (
+  <button
+    className={'water-btn' + (wateringId === crop.id ? ' watering' : '')}
+    onClick={() => handleWater(crop.id)}
+    disabled={wateringId === crop.id}
+  >
+    {wateringId === crop.id ? '💧 Поливаем...' : '💧 Полить'}
+  </button>
+)}
                 {!crop.fertilized ? (
                   <button className="fertilize-btn" onClick={() => onFertilize(crop.id)}>
                     ⚡ Ускорить 100💰
