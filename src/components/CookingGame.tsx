@@ -19,8 +19,8 @@ function getZone(pos: number): Zone {
 }
 
 const ZONE_MULTIPLIER: Record<Zone, number> = {
-  perfect: 2.0,
-  good: 1.5,
+  perfect: 1.3,
+  good: 1.15,
   ok: 1.0,
   miss: 0.5,
 };
@@ -35,12 +35,11 @@ const ZONE_LABEL: Record<Zone, string> = {
 function CookingGame({ recipeName, resultPrice, onFinish, onCancel }: CookingGameProps) {
   const [pos, setPos] = useState(50);
   const [result, setResult] = useState<Zone | null>(null);
-  const dirRef = useRef(1);        // 1 = вправо, -1 = влево
+  const dirRef = useRef(1);
   const posRef = useRef(50);
   const rafRef = useRef<number>(0);
   const doneRef = useRef(false);
 
-  // Скорость: полный проход шкалы за ~1.2 секунды
   const SPEED = 100 / 1200;
 
   useEffect(() => {
@@ -72,8 +71,8 @@ function CookingGame({ recipeName, resultPrice, onFinish, onCancel }: CookingGam
   };
 
   const bonusText = () => {
-    if (result === 'perfect') return '+' + resultPrice + '💰 бонус!';
-if (result === 'good')    return '+' + Math.round(resultPrice * 0.5) + '💰 бонус!';
+    if (result === 'perfect') return '+' + Math.round(resultPrice * 0.3) + '💰 бонус';
+    if (result === 'good')    return '+' + Math.round(resultPrice * 0.15) + '💰 бонус';
     if (result === 'ok')      return 'Без бонуса';
     return 'В следующий раз точнее!';
   };
@@ -118,4 +117,5 @@ if (result === 'good')    return '+' + Math.round(resultPrice * 0.5) + '💰 б�
     </div>
   );
 }
- export default CookingGame;
+
+export default CookingGame;
