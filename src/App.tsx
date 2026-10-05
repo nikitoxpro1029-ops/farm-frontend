@@ -309,13 +309,16 @@ const loadBadge = async () => {
         {activeTab === 'profile' && <Profile />}
       </main>
       <TutorialOverlay
-        key={tutorialKey}
-        onAdvance={() => setTutorialKey(k => k + 1)}
-        onComplete={() => {
-          loadState();
-          loadBadge();
-        }}
-      />
+  key={tutorialKey}
+  onAdvance={() => {
+    setTutorialKey(k => k + 1);
+    loadState();
+  }}
+  onComplete={() => {
+    loadState();
+    loadBadge();
+  }}
+/>
     </div>
   );
 }
