@@ -166,19 +166,21 @@ function Farm({
             </div>
             <div className="crop-name">{crop.name}</div>
 
-            <div className="crop-water-bar">
-              <div
-                className={
-                  'crop-water-fill' +
-                  (crop.water_level < 30 ? ' low' : '') +
-                  (isThirsty(crop.water_level) ? ' thirsty' : '')
-                }
-                style={{ width: Math.max(crop.water_level, 4) + '%' }}
-              />
-              {isThirsty(crop.water_level) && (
-                <span className="crop-water-warning">⚠️</span>
-              )}
-            </div>
+           {!isReady(crop.ready_at) && (
+  <div className="crop-water-bar">
+    <div
+      className={
+        'crop-water-fill' +
+        (crop.water_level < 30 ? ' low' : '') +
+        (isThirsty(crop.water_level) ? ' thirsty' : '')
+      }
+      style={{ width: Math.max(crop.water_level, 4) + '%' }}
+    />
+    {isThirsty(crop.water_level) && (
+      <span className="crop-water-warning">⚠️</span>
+    )}
+  </div>
+)}
 
             <div className="crop-quality">⭐️ {crop.quality}/100</div>
 
