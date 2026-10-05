@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { playSound } from '../Sounds';
-import Coin from './Coin';
-import CropIcon from './CropIcon';
+import { getSeedIcon } from '../seedIcons';
+import { playSound, playRouletteSpin } from '../Sounds';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -40,17 +39,7 @@ function Packs({ onOpen }: PacksProps) {
   const [rouletteItems, setRouletteItems] = useState<RouletteItem[]>([]);
   const [spinning, setSpinning] = useState(false);
   const [offset, setOffset] = useState(0);
-  const viewportRef = useRef<HTMLDivElement>(null);useEffect(() => {
-  const el = viewportRef.current;
-  if (!el) return;
-  const blockTouch = (e: TouchEvent) => {
-    e.preventDefault();
-  };
-  el.addEventListener('touchmove', blockTouch, { passive: false });
-  return () => {
-    el.removeEventListener('touchmove', blockTouch);
-  };
-}, [rouletteItems.length]);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const tg = (window as any).Telegram?.WebApp;
 
   const packs: Pack[] = [
@@ -77,6 +66,18 @@ function Packs({ onOpen }: PacksProps) {
     { name: 'Кристальная тыква', rarity: 'legendary' },
     { name: 'Драконье семя', rarity: 'mythic' },
   ];
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const blockTouch = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+    el.addEventListener('touchmove', blockTouch, { passive: false });
+    return () => {
+      el.removeEventListener('touchmove', blockTouch);
+    };
+  }, [rouletteItems.length]);
 
   const openPack = async (packId: number) => {
     setOpening(true);
@@ -106,7 +107,8 @@ function Packs({ onOpen }: PacksProps) {
       setOffset(0);
       setSpinning(true);
       setResult(null);
-      playSound('roulette', 0.3);
+
+      playRouletteSpin(4200);
 
       setTimeout(() => {
         const viewportWidth = viewportRef.current?.offsetWidth || 360;
@@ -117,12 +119,12 @@ function Packs({ onOpen }: PacksProps) {
         tg?.HapticFeedback?.impactOccurred('medium');
 
         setTimeout(() => {
-  setSpinning(false);
-  setResult(winner);
-  playSound('win');
-  tg?.HapticFeedback?.notificationOccurred('success');
-  onOpen();
-}, 4400);
+          setSpinning(false);
+          setResult(winner);
+          playSound('win');
+          tg?.HapticFeedback?.notificationOccurred('success');
+          onOpen();
+        }, 4400);
       }, 100);
 
     } catch (error: any) {
@@ -136,9 +138,7 @@ function Packs({ onOpen }: PacksProps) {
     setRouletteItems([]);
     setOffset(0);
     setOpening(false);
-  };
-
-  return (
+  };return (
     <div className="packs">
       <h2>Паки с семенами</h2>
 
@@ -150,7 +150,7 @@ function Packs({ onOpen }: PacksProps) {
                 <div className="pack-image">{pack.icon}</div>
                 <h3>{pack.name}</h3>
                 <p className="pack-desc">{pack.description}</p>
-                <div className="pack-price"><Coin size={14} /> {pack.price}</div>
+                <div className="pack-price">💰 {pack.price}</div>
                 <button
                   onClick={function() { openPack(pack.id); }}
                   disabled={opening}
@@ -178,9 +178,7 @@ function Packs({ onOpen }: PacksProps) {
             >
               {rouletteItems.map((item, i) => (
                 <div key={i} className={'roulette-item ' + item.rarity}>
-                 <div className="roulette-icon">
-  <CropIcon name={item.name} size={56} />
-</div>
+                  <div className="roulette-icon">{getSeedIcon(item.name)}</div>
                   <div className="roulette-name">{item.name}</div>
                 </div>
               ))}
@@ -192,9 +190,7 @@ function Packs({ onOpen }: PacksProps) {
       {result && (
         <div className="pack-result-overlay" onClick={closeResult}>
           <div className={'pack-result ' + result.rarity}>
-            <div className="result-image">
-  <CropIcon name={result.name} size={100} />
-</div>
+            <div className="result-image">{getSeedIcon(result.name)}</div>
             <h3>Вы получили:</h3>
             <p className="result-name">{result.name}</p>
             <p className="result-rarity">{result.rarity}</p>

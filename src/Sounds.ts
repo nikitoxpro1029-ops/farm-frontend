@@ -71,4 +71,38 @@ export function isMusicEnabled() {
 
 export function isSfxEnabled() {
   return sfxEnabled;
+}export function playRouletteSpin(totalDuration = 4200) {
+  if (!sfxEnabled) return;
+
+  let elapsed = 0;
+  let interval = 40; // стартовый интервал в мс — очень плотный
+  const ticks: number[] = [];
+
+  while (elapsed < totalDuration - 100) {
+    ticks.push(elapsed);
+
+    // После 40% времени — плавное замедление
+    const progress = elapsed / totalDuration;
+    if (progress > 0.4) {
+      interval *= 1.13;
+    } else {
+      interval *= 1.03;
+    }
+    elapsed += interval;
+  }
+
+  // Финальный тик точно в момент остановки
+  ticks.push(totalDuration);
+
+  ticks.forEach((delay, index) => {
+    setTimeout(() => {
+      try {
+        const audio = new Audio(SOUNDS.roulette);
+        // Первые тики чуть громче, последние — тише (эффект удаления)
+        const progress = index / ticks.length;
+        audio.volume = 0.35 - progress * 0.15;
+        audio.play().catch(() => {});
+      } catch {}
+    }, delay);
+  });
 }
