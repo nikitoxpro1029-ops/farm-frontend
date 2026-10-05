@@ -2385,4 +2385,19 @@ h2 {
 
 .tutorial-skip-btn:active {
   color: #aaa;
+}.tutorial-mini {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1999;
+  animation: badgePulse 2s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
 }

@@ -9,6 +9,7 @@ interface TutorialState {
   completed: boolean;
   totalSteps: number;
   dialog: string | null;
+  mode: 'manual' | 'action';
 }
 
 interface TutorialOverlayProps {
@@ -20,6 +21,7 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
   const [state, setState] = useState<TutorialState | null>(null);
   const [loading, setLoading] = useState(true);
   const [advancing, setAdvancing] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const tg = (window as any).Telegram?.WebApp;
 
   const headers = { 'x-telegram-init-data': tg?.initData || '' };
@@ -27,6 +29,33 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
   useEffect(() => {
     load();
   }, []);
+
+  // Polling: пока показывается шаг с action — каждые 2 сек проверяем,
+  // не продвинулся ли туториал (игрок выполнил действие).
+  useEffect(() => {
+    if (!state || state.skipped || state.completed) return;
+    if (state.mode !== 'action') return;
+
+    const id = setInterval(async () => {
+      try {
+        const res = await axios.get(API_URL + '/api/tutorial', { headers });
+        if (res.data.step !== state.step) {
+          setState(res.data);
+          tg?.HapticFeedback?.impactOccurred('light');
+          if (res.data.completed) {
+            tg?.showAlert('🎉 Обучение пройдено! Дед Мазай доволен.');
+            onComplete();
+          } else {
+            onAdvance();
+          }
+        }
+      } catch (e) {
+        // тихо
+      }
+    }, 2000);
+
+    return () => clearInterval(id);
+  }, [state]);
 
   const load = async () => {
     try {
@@ -39,7 +68,8 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
     }
   };
 
-  const advance = async () => {
+  // Для manual-шагов — просто продвигаем через API
+  const advanceManual = async () => {
     if (!state || advancing) return;
     setAdvancing(true);
     try {
@@ -49,7 +79,6 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
         { headers }
       );
       tg?.HapticFeedback?.impactOccurred('light');
-
       if (res.data.completed) {
         tg?.showAlert('🎉 Обучение пройдено! Дед Мазай доволен.');
         onComplete();
@@ -64,21 +93,27 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
     }
   };
 
-  const skip = async () => {
-    if (!state) return;
-    try {
-      await axios.post(API_URL + '/api/tutorial/skip', {}, { headers });
-      onComplete();
-    } catch (e) {
-      console.error(e);
-    }
+  // Для action-шагов — просто скрываемся, игрок идёт делать.
+  const collapse = () => {
+    setCollapsed(true);
+    tg?.HapticFeedback?.impactOccurred('light');
   };
 
   if (loading || !state) return null;
   if (state.skipped || state.completed) return null;
   if (!state.dialog) return null;
 
+  // Свёрнутый вид — маленькая плашка в углу
+  if (collapsed) {
+    return (
+      <div className="tutorial-mini" onClick={() => setCollapsed(false)}>
+        👴 Подсказка Деда
+      </div>
+    );
+  }
+
   const progressPercent = Math.round((state.step / state.totalSteps) * 100);
+  const isAction = state.mode === 'action';
 
   return (
     <div className="tutorial-overlay">
@@ -98,17 +133,19 @@ function TutorialOverlay({ onAdvance, onComplete }: TutorialOverlayProps) {
           Шаг {state.step} из {state.totalSteps}
         </div>
 
-        <button
-          className="tutorial-next-btn"
-          onClick={advance}
-          disabled={advancing}
-        >
-          {advancing ? '...' : state.step === state.totalSteps ? 'Завершить! 🎉' : 'Дальше →'}
-        </button>
-
-        <button className="tutorial-skip-btn" onClick={skip}>
-          Я всё знаю, пропустить
-        </button>
+        {isAction ? (
+          <button className="tutorial-next-btn" onClick={collapse}>
+            Понятно, делаю! 👍
+          </button>
+        ) : (
+          <button
+            className="tutorial-next-btn"
+            onClick={advanceManual}
+            disabled={advancing}
+          >
+            {advancing ? '...' : state.step === state.totalSteps ? 'Завершить! 🎉' : 'Дальше →'}
+          </button>
+        )}
       </div>
     </div>
   );
