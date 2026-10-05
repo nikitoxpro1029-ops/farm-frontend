@@ -1759,4 +1759,46 @@ h2 {
   font-weight: bold;
   cursor: pointer;
   width: 100%;
+}/* XP-бар */
+.xp-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  background: #2d2d44;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.level-badge {
+  background: linear-gradient(135deg, #ff9800, #ffd700);
+  color: #1a1a2e;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.xp-bar {
+  flex: 1;
+  height: 10px;
+  background: #1a1a2e;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #3a3a55;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff9800, #ffd700);
+  border-radius: 6px;
+  transition: width 0.6s ease;
+}
+
+.xp-text {
+  font-size: 10px;
+  color: #ffd700;
+  font-weight: bold;
+  white-space: nowrap;
 }

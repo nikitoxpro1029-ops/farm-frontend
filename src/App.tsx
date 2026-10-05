@@ -18,7 +18,7 @@ function App() {
   const [seeds, setSeeds] = useState([]);
   const [plotsInfo, setPlotsInfo] = useState<any>(null);
   const [autowater, setAutowater] = useState<any>(null);
-  const [referralInfo, setReferralInfo] = useState<any>(null);
+  const [referralInfo, setReferralInfo] = useState<any>(null);const [xpForNext, setXpForNext] = useState(100);
   const [activeTab, setActiveTab] = useState('farm');
 
   const tg = (window as any).Telegram?.WebApp;
@@ -87,7 +87,7 @@ function App() {
       setUser(res.data.user);
       setCrops(res.data.crops);
       setSeeds(res.data.seeds);
-      setAutowater(res.data.autowater);
+      setAutowater(res.data.autowater);setXpForNext(res.data.xpForNext || 100);
 
       const plotsRes = await axios.get(API_URL + '/api/farm/plots', { headers });
       setPlotsInfo(plotsRes.data);
@@ -226,13 +226,30 @@ function App() {
             className="sound-toggle"
             onClick={() => {
               const on = toggleMusic();
-              tg?.showAlert(on ? '🎵 Музыка вкл' : '🔕 Музыка выкл');
+              tg?.showAlert(on ? '🎵 Музыка вкл' : '🎵 Музыка выкл');
             }}
           >
             {isMusicEnabled() ? '🎵' : '🔕'}
           </button>
         </div>
       </header>
+
+      {user && (
+        <div className="xp-bar-wrapper">
+          <div className="level-badge">Ур. {user.level || 1}</div>
+          <div className="xp-bar">
+            <div
+              className="xp-bar-fill"
+              style={{
+                width: Math.min(100, ((user.xp || 0) / xpForNext) * 100) + '%',
+              }}
+            />
+          </div>
+          <div className="xp-text">
+            {user.xp || 0} / {xpForNext} XP
+          </div>
+        </div>
+      )}
 
       <nav className="tabs">
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
