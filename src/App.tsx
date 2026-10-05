@@ -3,11 +3,10 @@ import axios from 'axios';
 import Farm from './components/Farm';
 import Packs from './components/Packs';
 import Barn from './components/Barn';
-
 import MemoryGame from './components/MemoryGame';
-import Coin from './components/Coin';
-import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx,  } from './Sounds';
 import Profile from './components/Profile';
+import Coin from './components/Coin';
+import { startMusic, isMusicEnabled, isSfxEnabled, toggleMusic, toggleSfx } from './Sounds';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -18,7 +17,8 @@ function App() {
   const [seeds, setSeeds] = useState([]);
   const [plotsInfo, setPlotsInfo] = useState<any>(null);
   const [autowater, setAutowater] = useState<any>(null);
-  const [referralInfo, setReferralInfo] = useState<any>(null);const [xpForNext, setXpForNext] = useState(100);
+  const [referralInfo, setReferralInfo] = useState<any>(null);
+  const [xpForNext, setXpForNext] = useState(100);
   const [activeTab, setActiveTab] = useState('farm');
 
   const tg = (window as any).Telegram?.WebApp;
@@ -29,7 +29,9 @@ function App() {
       tg.expand();
       tg.disableVerticalSwipes?.();
     }
-    loadState();const startMusicOnTouch = () => {
+    loadState();
+
+    const startMusicOnTouch = () => {
       if (isMusicEnabled()) startMusic();
       document.removeEventListener('touchstart', startMusicOnTouch);
       document.removeEventListener('click', startMusicOnTouch);
@@ -87,7 +89,8 @@ function App() {
       setUser(res.data.user);
       setCrops(res.data.crops);
       setSeeds(res.data.seeds);
-      setAutowater(res.data.autowater);setXpForNext(res.data.xpForNext || 100);
+      setAutowater(res.data.autowater);
+      setXpForNext(res.data.xpForNext || 100);
 
       const plotsRes = await axios.get(API_URL + '/api/farm/plots', { headers });
       setPlotsInfo(plotsRes.data);
@@ -118,8 +121,7 @@ function App() {
       const initData = tg?.initData || '';
       const res = await axios.post(
         API_URL + '/api/farm/buy-plot',
-        {},
-        { headers: { 'x-telegram-init-data': initData } }
+        {},{ headers: { 'x-telegram-init-data': initData } }
       );
       tg?.showAlert('✅ Куплена грядка! Теперь у вас ' + res.data.newPlots + ' грядок.');
       tg?.HapticFeedback?.notificationOccurred('success');
@@ -134,7 +136,8 @@ function App() {
       const initData = tg?.initData || '';
       const res = await axios.post(
         API_URL + '/api/farm/harvest',
-        { cropId },{ headers: { 'x-telegram-init-data': initData } }
+        { cropId },
+        { headers: { 'x-telegram-init-data': initData } }
       );
       tg?.showAlert('🌾 Собрано: ' + res.data.cropName + '\n💰 Можно продать за ' + res.data.sellPrice + ' монет в Амбаре');
       loadState();
@@ -144,19 +147,19 @@ function App() {
   };
 
   const waterCrop = async (cropId: number) => {
-  try {
-    const initData = tg?.initData || '';
-    await axios.post(
-      API_URL + '/api/farm/water',
-      { cropId },
-      { headers: { 'x-telegram-init-data': initData } }
-    );
-    tg?.HapticFeedback?.impactOccurred('light');
-    loadState();
-  } catch (error: any) {
-    tg?.showAlert(error.response?.data?.error || 'Ошибка');
-  }
-};
+    try {
+      const initData = tg?.initData || '';
+      await axios.post(
+        API_URL + '/api/farm/water',
+        { cropId },
+        { headers: { 'x-telegram-init-data': initData } }
+      );
+      tg?.HapticFeedback?.impactOccurred('light');
+      loadState();
+    } catch (error: any) {
+      tg?.showAlert(error.response?.data?.error || 'Ошибка');
+    }
+  };
 
   const fertilize = async (cropId: number) => {
     try {
@@ -226,7 +229,7 @@ function App() {
             className="sound-toggle"
             onClick={() => {
               const on = toggleMusic();
-              tg?.showAlert(on ? '🎵 Музыка вкл' : '🎵 Музыка выкл');
+              tg?.showAlert(on ? '🎵 Музыка вкл' : '🔕 Музыка выкл');
             }}
           >
             {isMusicEnabled() ? '🎵' : '🔕'}
@@ -245,23 +248,21 @@ function App() {
               }}
             />
           </div>
-          <div className="xp-text">
-            {user.xp || 0} / {xpForNext} XP
+          <div className="xp-text">{user.xp || 0} / {xpForNext}
           </div>
         </div>
       )}
 
       <nav className="tabs">
         <button className={activeTab === 'barn' ? 'active' : ''} onClick={() => setActiveTab('barn')}>Амбар</button>
-        <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => setActiveTab('profile')}>👤</button>
         <button className={activeTab === 'game' ? 'active' : ''} onClick={() => setActiveTab('game')}>🎮 Игры</button>
-        
+        <button className={activeTab === 'profile' ? 'active' : ''} onClick={() => setActiveTab('profile')}>👤</button>
         <button className={activeTab === 'farm' ? 'active' : ''} onClick={() => setActiveTab('farm')}>Ферма</button>
         <button className={activeTab === 'packs' ? 'active' : ''} onClick={() => setActiveTab('packs')}>Паки</button>
       </nav>
 
       <main className="content">
-        {activeTab === 'catalog' && <Catalog />}{activeTab === 'farm' && (
+        {activeTab === 'farm' && (
           <Farm
             crops={crops}
             seeds={seeds}
@@ -272,14 +273,15 @@ function App() {
             plotsInfo={plotsInfo}
             onBuyPlot={buyPlot}
             autowater={autowater}
-            onBuyAutowater={buyAutowater}referralInfo={referralInfo}
+            onBuyAutowater={buyAutowater}
+            referralInfo={referralInfo}
             onInvite={inviteFriend}
           />
         )}
         {activeTab === 'packs' && <Packs onOpen={loadState} />}
         {activeTab === 'barn' && <Barn onSell={loadState} />}
-        {activeTab === 'top' && <Leaderboard />}
         {activeTab === 'game' && <MemoryGame onFinish={loadState} />}
+        {activeTab === 'profile' && <Profile />}
       </main>
     </div>
   );
