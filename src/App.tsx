@@ -143,35 +143,20 @@ function App() {
     }
   };
 
-  const waterCrop = async (cropId: number, score: number) => {
-    try {
-      const initData = tg?.initData || '';
-      const res = await axios.post(
-        API_URL + '/api/farm/water',
-        { cropId, score },
-        { headers: { 'x-telegram-init-data': initData } }
-      );
-
-      let message = '💧 Полив успешен!\n' +
-        'Вода: ' + res.data.waterLevel + '%\n' +
-        'Качество: ' + res.data.quality + '/100';
-
-      if (res.data.bonusQuality > 0) {
-        message += '\n\n🔥 БОНУС ЗА СЕРИЮ: +10 к качеству!';
-        tg?.HapticFeedback?.notificationOccurred('success');
-      } else {
-        const left = 3 - (res.data.waterStreak || 0);
-        if (left > 0 && left < 3) {
-          message += '\n\n🔥 До бонуса: ещё ' + left + ' полив(а)';
-        }
-      }
-
-      tg?.showAlert(message);
-      loadState();
-    } catch (error: any) {
-      tg?.showAlert(error.response?.data?.error || 'Ошибка');
-    }
-  };
+  const waterCrop = async (cropId: number) => {
+  try {
+    const initData = tg?.initData || '';
+    await axios.post(
+      API_URL + '/api/farm/water',
+      { cropId },
+      { headers: { 'x-telegram-init-data': initData } }
+    );
+    tg?.HapticFeedback?.impactOccurred('light');
+    loadState();
+  } catch (error: any) {
+    tg?.showAlert(error.response?.data?.error || 'Ошибка');
+  }
+};
 
   const fertilize = async (cropId: number) => {
     try {

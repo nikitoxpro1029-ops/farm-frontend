@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import WaterGame from './WaterGame';
 import CropIcon from './CropIcon';
-import { playSound } from '../Sounds';
 
 interface Crop {
   id: number;
@@ -11,9 +9,8 @@ interface Crop {
   ready_at: string;
   expires_at: string | null;
   water_level: number;
-  quality: number;
-  water_streak: number;
   fertilized: boolean;
+  dry_since: string | null;
 }
 
 interface Seed {
@@ -29,7 +26,7 @@ interface FarmProps {
   seeds: Seed[];
   onPlant: (seedTypeId: number) => void;
   onHarvest: (cropId: number) => void;
-  onWater: (cropId: number, score: number) => void;
+  onWater: (cropId: number) => void;
   onFertilize: (cropId: number) => void;
   plotsInfo: { plots: number; maxAllowed: number; canBuy: boolean; nextPrice: number; planted: number } | null;
   onBuyPlot: () => void;
@@ -40,22 +37,13 @@ interface FarmProps {
 }
 
 function Farm({
-  crops,
-  seeds,
-  onPlant,
-  onHarvest,
-  onWater,
-  onFertilize,
-  plotsInfo,
-  onBuyPlot,
-  autowater,
-  onBuyAutowater,
-  referralInfo,
-  onInvite,
+  crops, seeds, onPlant, onHarvest, onWater, onFertilize,
+  plotsInfo, onBuyPlot, autowater, onBuyAutowater,
+  referralInfo, onInvite,
 }: FarmProps) {
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
-  const [wateringCropId, setWateringCropId] = useState<number | null>(null);
+  const [wateringId, setWateringId] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -68,14 +56,22 @@ function Farm({
     const totalMins = Math.floor(diff / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
     const secsStr = secs < 10 ? '0' + secs : '' + secs;
-
-    if (totalMins < 60) {
-      return totalMins + ':' + secsStr;
-    }
+    if (totalMins < 60) return totalMins + ':' + secsStr;
     const hours = Math.floor(totalMins / 60);
     const mins = totalMins % 60;
     const minsStr = mins < 10 ? '0' + mins : '' + mins;
     return hours + 'ч ' + minsStr + 'м';
+  };
+
+  const getDeathTime = (drySince: string | null) => {
+    if (!drySince) return '';
+    const dryMs = new Date(drySince).getTime();
+    const deathAt = dryMs + 12 * 60 * 60 * 1000;
+    const timeToDeath = deathAt - now;
+    if (timeToDeath <= 0) return 'Погибает...';
+    const hours = Math.floor(timeToDeath / 3600000);
+    const mins = Math.floor((timeToDeath % 3600000) / 60000);
+    return hours + 'ч ' + mins + 'м';
   };
 
   const getExpireTime = (expiresAt: string | null) => {
@@ -93,30 +89,24 @@ function Farm({
     return diff > 0 && diff < 2 * 60 * 60 * 1000;
   };
 
-  const isThirsty = (waterLevel: number) => waterLevel < 20;
+  const isReady = (readyAt: string) => new Date(readyAt).getTime() <= now;
 
   const getProgress = (plantedAt: string, readyAt: string) => {
-    const plantedTime = new Date(plantedAt).getTime();
-    const readyTime = new Date(readyAt).getTime();
-    const total = readyTime - plantedTime;
+    const p = new Date(plantedAt).getTime();
+    const r = new Date(readyAt).getTime();
+    const total = r - p;
     if (total <= 0) return 100;
-    const passed = now - plantedTime;
+    const passed = now - p;
     const percent = (passed / total) * 100;
     if (percent < 0) return 0;
     if (percent > 100) return 100;
     return Math.floor(percent);
   };
 
-  const isReady = (readyAt: string) => new Date(readyAt).getTime() <= now;
-
-  const getGrowthStyle = (plantedAt: string, readyAt: string) => {
-    const percent = getProgress(plantedAt, readyAt);
-    let scale = 0.4;
-    let opacity = 0.5;
-    if (percent >= 25) { scale = 0.55; opacity = 0.7; }
-    if (percent >= 50) { scale = 0.75; opacity = 0.85; }
-    if (percent >= 75) { scale = 0.9; opacity = 0.95; }
-    return { transform: 'scale(' + scale + ')', opacity: opacity };
+  const handleWater = (cropId: number) => {
+    setWateringId(cropId);
+    onWater(cropId);
+    setTimeout(() => setWateringId(null), 600);
   };
 
   return (
@@ -131,8 +121,9 @@ function Farm({
           </div>
           {plotsInfo.canBuy && (
             <button className="buy-plot-btn" onClick={onBuyPlot}>
-              + Грядка<br /><span className="buy-plot-price">{plotsInfo.nextPrice}💰</span>
-            </button>
+              + Грядка<br />
+              <span className="buy-plot-price">{plotsInfo.nextPrice}💰</span>
+[05.10.2026 22:55] Никита: </button>
           )}
         </div>
       )}
@@ -147,9 +138,7 @@ function Farm({
                 : 'Пригласи друга — получи 500💰'}
             </div>
           </div>
-          <button className="referral-btn" onClick={onInvite}>
-            Пригласить
-          </button>
+          <button className="referral-btn" onClick={onInvite}>Пригласить</button>
         </div>
       )}
 
@@ -157,8 +146,7 @@ function Farm({
         <div className="autowater-banner">
           💧 Автополив активен до{' '}
           {new Date(autowater.until).toLocaleTimeString('ru-RU', {
-            hour: '2-digit',
-            minute: '2-digit',
+            hour: '2-digit', minute: '2-digit',
           })}
         </div>
       )}
@@ -176,10 +164,10 @@ function Farm({
           <div
             key={crop.id}
             className={
-              'crop-card ' +
-              crop.rarity +
+              'crop-card ' + crop.rarity +
               (isReady(crop.ready_at) ? ' ready' : '') +
-              (harvestingId === crop.id ? ' harvesting' : '')
+              (harvestingId === crop.id ? ' harvesting' : '') +
+              (crop.water_level === 0 ? ' dying' : '')
             }
           >
             {harvestingId === crop.id && (
@@ -193,77 +181,61 @@ function Farm({
             )}
 
             <div className="crop-image">
-              <div style={isReady(crop.ready_at) ? {} : getGrowthStyle(crop.planted_at, crop.ready_at)}>
+              <div>
                 <CropIcon name={crop.name} size={56} />
               </div>
             </div>
             <div className="crop-name">{crop.name}</div>
 
             {!isReady(crop.ready_at) && (
-              <div className="crop-water-bar">
-                <div
-                  className={
-                    'crop-water-fill' +
-                    (crop.water_level < 30 ? ' low' : '') +
-                    (isThirsty(crop.water_level) ? ' thirsty' : '')
-                  }
-                  style={{ width: Math.max(crop.water_level, 4) + '%' }}
-                />
-                {isThirsty(crop.water_level) && (
-                  <span className="crop-water-warning">⚠️</span>
+              <>
+                <div className="crop-water-bar">
+                  <div
+                    className={'crop-water-fill' + (crop.water_level < 30 ? ' low' : '')}
+                    style={{ width: Math.max(crop.water_level, 4) + '%' }}
+                  />
+                </div>
+
+                {crop.water_level === 0 && (
+                  <div className="crop-dying">
+                    ⚠️ Сохнет! Погибнет через {getDeathTime(crop.dry_since)}
+                  </div>
                 )}
-              </div>
-            )}
 
-            <div className="crop-quality">⭐️ {crop.quality}/100</div>
+                <button
+                  className={'water-btn' + (wateringId === crop.id ? ' watering' : '')}
+                  onClick={() => handleWater(crop.id)}
+                  disabled={wateringId === crop.id}
+                >
+                  {wateringId === crop.id ? '💧 Поливаем...' : '💧 Полить'}
+                </button>
 
-            {!isReady(crop.ready_at) && (crop.water_streak || 0) > 0 && (
-              <div className="crop-streak">🔥 {crop.water_streak}/3</div>
-            )}
-
-            {!isReady(crop.ready_at) && (
-              <button
-                className="water-btn"
-                onClick={() => setWateringCropId(crop.id)}
-              >
-                💧 Полить
-              </button>
-            )}
-
-            {!isReady(crop.ready_at) && !crop.fertilized && (
-              <button
-                className="fertilize-btn"
-                onClick={() => onFertilize(crop.id)}
-              >
-                ⚡️ Ускорить 100💰
-              </button>
-            )}
-
-            {!isReady(crop.ready_at) && crop.fertilized && (
-              <div className="fertilized-badge">⚡️ Удобрено</div>
+                {!crop.fertilized ? (
+                  <button className="fertilize-btn" onClick={() => onFertilize(crop.id)}>
+                    ⚡ Ускорить 100💰
+                  </button>
+                ) : (
+                  <div className="fertilized-badge">⚡ Удобрено</div>
+                )}
+              </>
             )}
 
             <div className="crop-timer">
               {isReady(crop.ready_at) ? (
                 <>
                   <button
-  className="harvest-btn"
-  onClick={() => {
-    playSound('coins');
-    setHarvestingId(crop.id);
-    onHarvest(crop.id);
-    setTimeout(() => setHarvestingId(null), 1200);
-  }}
->
-  Собрать
-</button>
-                  <div
-                    className={
-                      'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')
-                    }
+                    className="harvest-btn"
+                    onClick={() => {
+                      setHarvestingId(crop.id);
+                      onHarvest(crop.id);
+                      setTimeout(() => setHarvestingId(null), 1200);
+                    }}
                   >
-                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось:{' '}
-                    {getExpireTime(crop.expires_at)}
+                    Собрать
+                  </button>
+                  <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
+                    {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.
+ expires_at)}
                   </div>
                 </>
               ) : (
@@ -271,13 +243,11 @@ function Farm({
                   <div className="crop-progress-bar">
                     <div
                       className="crop-progress-fill"
-                      style={{
-                        width: getProgress(crop.planted_at, crop.ready_at) + '%',
-                      }}
+                      style={{ width: getProgress(crop.planted_at, crop.ready_at) + '%' }}
                     />
                   </div>
                   <div className="crop-progress-text">
-                    <span>⏱️ {getTimeLeft(crop.ready_at)}</span>
+                    <span>⏱ {getTimeLeft(crop.ready_at)}</span>
                     <span className="crop-progress-percent">
                       {getProgress(crop.planted_at, crop.ready_at)}%
                     </span>
@@ -298,25 +268,10 @@ function Farm({
             </div>
             <div className="seed-name">{seed.name}</div>
             <div className="seed-qty">x{seed.quantity}</div>
-            <button
-              className="plant-btn"
-              onClick={() => onPlant(seed.seed_type_id)}
-            >
-              Посадить
-            </button>
+            <button className="plant-btn" onClick={() => onPlant(seed.seed_type_id)}>Посадить</button>
           </div>
         ))}
       </div>
-
-      {wateringCropId !== null && (
-        <WaterGame
-          onFinish={(score) => {
-            onWater(wateringCropId, score);
-            setWateringCropId(null);
-          }}
-          onCancel={() => setWateringCropId(null)}
-        />
-      )}
     </div>
   );
 }
