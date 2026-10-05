@@ -103,7 +103,7 @@ function Bonus({ onClaim }: BonusProps) {
                 {isDone ? '✅' : isDay7 ? '🌟' : '💰'}
               </div>
               <div className="bonus-day-reward">
-                {isDay7 ? reward + '+🌟' : reward}
+                {reward}
               </div>
             </div>
           );
