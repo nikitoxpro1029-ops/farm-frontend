@@ -54,7 +54,7 @@ function Packs({ onOpen }: PacksProps) {
   const tg = (window as any).Telegram?.WebApp;
 
   const packs: Pack[] = [
-    { id: 1, name: 'Базовый пак', price: 50, description: 'Обычные семена', icon: '📦', rarity: 'common' },
+    { id: 1, name: 'Базовый пак', price: 30, description: 'Обычные семена', icon: '📦', rarity: 'common' },
     { id: 2, name: 'Редкий пак', price: 150, description: 'Шанс на редкие', icon: '🎁', rarity: 'rare' },
     { id: 3, name: 'Легендарный пак', price: 500, description: 'Эпик и мифик', icon: '💎', rarity: 'legendary' },
   ];

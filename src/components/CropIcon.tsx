@@ -6,7 +6,8 @@ interface CropIconProps {
 
 const ICON_MAP: { [key: string]: string } = {
   'Пшеница': 'wheat.png',
-  'Морковь': 'carrot.png',
+  'Морковь': 'carrot.png','Морковь золотая': 'carrot.png',
+
   'Картофель': 'potato.png',
   'Капуста': 'cabbage.png',
   'Огурец': 'cucumber.png',
