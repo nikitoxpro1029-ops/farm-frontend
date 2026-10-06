@@ -2400,4 +2400,16 @@ h2 {
   z-index: 1999;
   animation: badgePulse 2s ease-in-out infinite;
   -webkit-tap-highlight-color: transparent;
+}/* 💎 Кристаллы в шапке */
+.crystals {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #6a4cff, #4a2cd6);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: 0 0 12px rgba(106, 76, 255, 0.4);
 }

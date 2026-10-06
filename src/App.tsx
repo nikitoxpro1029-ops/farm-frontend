@@ -226,10 +226,15 @@ const loadBadge = async () => {
         <h1>🌾 Ферма</h1>
         <div className="header-right">
           {user && (
-            <div className="balance">
-              <Coin size={18} /> {user.balance}
-            </div>
-          )}
+  <>
+    <div className="crystals">
+      💎 {user.crystals || 0}
+    </div>
+    <div className="balance">
+      <Coin size={18} /> {user.balance}
+    </div>
+  </>
+)}
           <button
             className="sound-toggle"
             onClick={() => {
