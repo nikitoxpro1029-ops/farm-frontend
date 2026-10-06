@@ -345,18 +345,18 @@ function Farm({
       </div>
 
       <h2>Инвентарь семян</h2>
-      <div className="seeds-grid">
-        {seeds.map((seed) => (
-          <div key={seed.id} className={'seed-card ' + seed.rarity}>
-            <div className="seed-image">
-              <CropIcon name={seed.name} size={48} />
-            </div>
-            <div className="seed-name">{seed.name}</div>
-            <div className="seed-qty">x{seed.quantity}</div>
-            <button className="plant-btn" onClick={() => onPlant(seed.seed_type_id)}>Посадить</button>
-          </div>
-        ))}
+<p className="seeds-hint">👆 Тапни на пустую грядку, чтобы посадить</p>
+<div className="seeds-grid">
+  {seeds.map((seed) => (
+    <div key={seed.id} className={'seed-card ' + seed.rarity}>
+      <div className="seed-image">
+        <CropIcon name={seed.name} size={48} />
       </div>
+      <div className="seed-name">{seed.name}</div>
+      <div className="seed-qty">x{seed.quantity}</div>
+    </div>
+  ))}
+</div>
       {seedPickerFor !== null && (
         <div className="seed-picker-overlay" onClick={() => setSeedPickerFor(null)}>
           <div className="seed-picker-modal" onClick={(e) => e.stopPropagation()}>

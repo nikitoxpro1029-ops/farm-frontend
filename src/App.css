@@ -2728,6 +2728,16 @@ h2 {
 }
 
 @keyframes bonusFade {
-  0%   { opacity: 1; }
   100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+.seeds-hint {
+  text-align: center;
+  color: #4caf50;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 8px 0 12px;
+  padding: 8px 12px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 10px;
 }
