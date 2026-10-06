@@ -45,9 +45,10 @@ function Farm({
   plotsInfo, onBuyPlot, autowater, onBuyAutowater,
   referralInfo, onInvite,
 }: FarmProps) {
+  const tg = (window as any).Telegram?.WebApp;
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
-  const [harvestBonus, setHarvestBonus] = useState<{ bonus: number; level: number } | null>(null);
+  
   const [wateringId, setWateringId] = useState<number | null>(null);
   const [plotLevels, setPlotLevels] = useState<Record<number, number>>({});
   const [plotCosts, setPlotCosts] = useState<Record<number, { coins: number; crystals: number } | null>>({});
@@ -296,10 +297,21 @@ function Farm({
                     onClick={async () => {
   setHarvestingId(crop.id);
   const result = await onHarvest(crop.id);
-  if (result && result.incomeBonus > 0) {
-    setHarvestBonus({ bonus: result.incomeBonus, level: result.plotLevel });
-    setTimeout(() => setHarvestBonus(null), 2500);
+
+  if (result) {
+    tg?.showAlert(
+      '🌾 Собрано: ' + result.cropName + '\n💰 Можно продать в Амбаре',
+      () => {
+        if (result.incomeBonus > 0) {
+          tg?.showAlert(
+            '⬆️ Бонус грядки Ур. ' + result.plotLevel +
+            ': +' + result.incomeBonus + '💰 уже начислен!'
+          );
+        }
+      }
+    );
   }
+
   setTimeout(() => setHarvestingId(null), 1200);
 }}
                   >
@@ -375,12 +387,7 @@ function Farm({
         </div>
       )}
 
-      {harvestBonus && (
-        <div className="harvest-bonus-toast">
-          ⬆️ Бонус грядки Ур. {harvestBonus.level}: <strong>+{harvestBonus.bonus}💰</strong>
-        </div>
-      )}{upgradeFor !== null && (
-        
+        {upgradeFor !== null && (
         <PlotUpgradeModal
           plotIndex={upgradeFor}
           currentLevel={plotLevels[upgradeFor] || 1}
