@@ -721,7 +721,7 @@ h2 {
 .pack-card.common { border-color: #9e9e9e; }
 .pack-card.rare { border-color: #2196f3; }
 .pack-card.legendary { border-color: #ff9800; box-shadow: 0 0 15px rgba(255, 152, 0, 0.4); }
-
+.pack-card.mythic { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
 .pack-card h3 {
   font-size: 15px;
   margin: 8px 0 6px;
