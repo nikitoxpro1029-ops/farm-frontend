@@ -333,7 +333,39 @@ function Farm({
             <button className="plant-btn" onClick={() => onPlant(seed.seed_type_id)}>Посадить</button>
           </div>
         ))}
-      </div>{upgradeFor !== null && (
+      </div>
+      {seedPickerFor !== null && (
+        <div className="seed-picker-overlay" onClick={() => setSeedPickerFor(null)}>
+          <div className="seed-picker-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="seed-picker-title">Посадить на грядку #{seedPickerFor + 1}</div>
+            <div className="seed-picker-list">
+              {seeds.map((seed) => (
+                <button
+                  key={seed.id}
+                  className={'seed-picker-item ' + seed.rarity}
+                  onClick={() => {
+                    onPlant(seed.seed_type_id, seedPickerFor);
+                    setSeedPickerFor(null);
+                  }}
+                >
+                  <CropIcon name={seed.name} size={32} />
+                  <span>{seed.name}</span>
+                  <span>x{seed.quantity}</span>
+                </button>
+              ))}
+              {seeds.length === 0 && (
+                <p className="empty">Нет семян. Купите в Паках!</p>
+              )}
+            </div>
+            <button className="seed-picker-cancel" onClick={() => setSeedPickerFor(null)}>
+              Отмена
+            </button>
+          </div>
+        </div>
+      )}
+
+      {upgradeFor !== null && (
+        
         <PlotUpgradeModal
           plotIndex={upgradeFor}
           currentLevel={plotLevels[upgradeFor] || 1}
