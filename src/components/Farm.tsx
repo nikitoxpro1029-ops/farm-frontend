@@ -35,9 +35,12 @@ interface FarmProps {
   onBuyAutowater: () => void;
   referralInfo: { referralsCount: number; hasReferrer: boolean } | null;
   onInvite: () => void;
+  balance: number;
+  crystals: number;
 }
 
 function Farm({
+  balance, crystals,
   crops, seeds, onPlant, onHarvest, onWater, onFertilize,
   plotsInfo, onBuyPlot, autowater, onBuyAutowater,
   referralInfo, onInvite,
@@ -372,8 +375,8 @@ function Farm({
           currentBonuses={getBonuses(plotLevels[upgradeFor] || 1)}
           nextBonuses={getBonuses((plotLevels[upgradeFor] || 1) + 1)}
           cost={{ coins: 500, crystals: 0 }}
-          balance={0}
-          crystals={0}
+          balance={balance}
+          crystals={crystals}
           onUpgrade={handleUpgrade}
           onClose={() => setUpgradeFor(null)}
         />

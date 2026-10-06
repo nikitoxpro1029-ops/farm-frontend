@@ -306,6 +306,8 @@ const loadBadge = async () => {
             onBuyAutowater={buyAutowater}
             referralInfo={referralInfo}
             onInvite={inviteFriend}
+            balance={user?.balance || 0}
+            crystals={user?.crystals || 0}
           />
         )}
         {activeTab === 'packs' && <Packs onOpen={loadState} />}
