@@ -154,7 +154,7 @@ const loadBadge = async () => {
         { headers: { 'x-telegram-init-data': initData } }
       );
       tg?.showAlert('🌾 Собрано: ' + res.data.cropName + '\n💰 Можно продать за ' + res.data.sellPrice + ' монет в Амбаре');
-      loadState();
+      loadState();return res.data;
     } catch (error: any) {
       tg?.showAlert(error.response?.data?.error || 'Ошибка');
     }

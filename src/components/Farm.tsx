@@ -26,7 +26,7 @@ interface FarmProps {
   crops: Crop[];
   seeds: Seed[];
  onPlant: (seedTypeId: number, plotIndex?: number) => void;
-  onHarvest: (cropId: number) => void;
+  onHarvest: (cropId: number) => Promise<any>;
   onWater: (cropId: number) => void;
   onFertilize: (cropId: number) => void;
   plotsInfo: { plots: number; maxAllowed: number; canBuy: boolean; nextPrice: number; planted: number } | null;
@@ -47,6 +47,7 @@ function Farm({
 }: FarmProps) {
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
+  const [harvestBonus, setHarvestBonus] = useState<{ bonus: number; level: number } | null>(null);
   const [wateringId, setWateringId] = useState<number | null>(null);
   const [plotLevels, setPlotLevels] = useState<Record<number, number>>({});
   const [plotCosts, setPlotCosts] = useState<Record<number, { coins: number; crystals: number } | null>>({});
@@ -292,11 +293,15 @@ function Farm({
                 <>
                   <button
                     className="harvest-btn"
-                    onClick={() => {
-                      setHarvestingId(crop.id);
-                      onHarvest(crop.id);
-                      setTimeout(() => setHarvestingId(null), 1200);
-                    }}
+                    onClick={async () => {
+  setHarvestingId(crop.id);
+  const result = await onHarvest(crop.id);
+  if (result && result.incomeBonus > 0) {
+    setHarvestBonus({ bonus: result.incomeBonus, level: result.plotLevel });
+    setTimeout(() => setHarvestBonus(null), 2500);
+  }
+  setTimeout(() => setHarvestingId(null), 1200);
+}}
                   >
                     Собрать
                   </button>
@@ -370,7 +375,11 @@ function Farm({
         </div>
       )}
 
-      {upgradeFor !== null && (
+      {harvestBonus && (
+        <div className="harvest-bonus-toast">
+          ⬆️ Бонус грядки Ур. {harvestBonus.level}: <strong>+{harvestBonus.bonus}💰</strong>
+        </div>
+      )}{upgradeFor !== null && (
         
         <PlotUpgradeModal
           plotIndex={upgradeFor}

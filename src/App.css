@@ -2705,4 +2705,29 @@ h2 {
   padding: 10px;
   font-size: 14px;
   cursor: pointer;
+}.harvest-bonus-toast {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(76, 175, 80, 0.6);
+  z-index: 1500;
+  animation: bonusPop 0.4s ease, bonusFade 0.4s ease 2.1s forwards;
+  pointer-events: none;
+}
+
+@keyframes bonusPop {
+  0%   { transform: translateX(-50%) scale(0.5); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1);   opacity: 1; }
+}
+
+@keyframes bonusFade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
 }
