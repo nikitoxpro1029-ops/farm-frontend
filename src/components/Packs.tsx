@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { getSeedIcon } from '../seedIcons';
 import { playSound, playRouletteSpin } from '../Sounds';
+import CropIcon from './CropIcon';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -179,7 +180,7 @@ function Packs({ onOpen }: PacksProps) {
               {rouletteItems.map((item, i) => (
                 <div key={i} className={'roulette-item ' + item.rarity}>
                   <div className="roulette-icon">{getSeedIcon(item.name)}</div>
-                  <div className="roulette-name">{item.name}</div>
+                  <div className="roulette-icon"><CropIcon name={item.name} size={40} /></div>
                 </div>
               ))}
             </div>
