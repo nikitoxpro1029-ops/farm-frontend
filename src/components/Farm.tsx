@@ -49,6 +49,7 @@ function Farm({
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
   const [wateringId, setWateringId] = useState<number | null>(null);
   const [plotLevels, setPlotLevels] = useState<Record<number, number>>({});
+  const [plotCosts, setPlotCosts] = useState<Record<number, { coins: number; crystals: number } | null>>({});
   const [seedPickerFor, setSeedPickerFor] = useState<number | null>(null);
   const [upgradeFor, setUpgradeFor] = useState<number | null>(null);
 
@@ -56,20 +57,22 @@ function Farm({
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
+  const loadPlotData = async () => {
+    try {
+      const initData = (window as any).Telegram?.WebApp?.initData || '';
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/farm/plot-levels', {
+        headers: { 'x-telegram-init-data': initData },
+      });
+      const data = await res.json();
+      setPlotLevels(data.levels || {});
+      setPlotCosts(data.costs || {});
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
-    const loadLevels = async () => {
-      try {
-        const initData = (window as any).Telegram?.WebApp?.initData || '';
-        const res = await fetch(import.meta.env.VITE_API_URL + '/api/farm/plot-levels', {
-          headers: { 'x-telegram-init-data': initData },
-        });
-        const data = await res.json();
-        setPlotLevels(data.levels || {});
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    loadLevels();
+    loadPlotData();
   }, []);
 
   const handleUpgrade = async (plotIndex: number) => {
@@ -84,8 +87,8 @@ function Farm({
       (window as any).Telegram?.WebApp?.showAlert(data.error);
       return;
     }
-    setPlotLevels((prev) => ({ ...prev, [plotIndex]: data.newLevel }));
     (window as any).Telegram?.WebApp?.showAlert('⬆️ Уровень ' + data.newLevel + '!');
+    await loadPlotData();
   };
 
   const getBonuses = (level: number) => ({
@@ -374,7 +377,7 @@ function Farm({
           currentLevel={plotLevels[upgradeFor] || 1}
           currentBonuses={getBonuses(plotLevels[upgradeFor] || 1)}
           nextBonuses={getBonuses((plotLevels[upgradeFor] || 1) + 1)}
-          cost={{ coins: 500, crystals: 0 }}
+          cost={plotCosts[upgradeFor] || { coins: 500, crystals: 0 }}
           balance={balance}
           crystals={crystals}
           onUpgrade={handleUpgrade}
