@@ -294,29 +294,23 @@ function Farm({
                 <>
                   <button
                     className="harvest-btn"
-                    onClick={async () => {
-  setHarvestingId(crop.id);
-  const result = await onHarvest(crop.id);
+    onClick={async () => {
+                  setHarvestingId(crop.id);
+                  const result = await onHarvest(crop.id);
 
-  if (result) {
-    tg?.showAlert(
-      '🌾 Собрано: ' + result.cropName + '\n💰 Можно продать в Амбаре',
-      () => {
-        if (result.incomeBonus > 0) {
-          tg?.showAlert(
-            '⬆️ Бонус грядки Ур. ' + result.plotLevel +
-            ': +' + result.incomeBonus + '💰 уже начислен!'
-          );
-        }
-      }
-    );
-  }
+                  if (result && result.cropName) {
+                    let msg = '🌾 Собрано: ' + result.cropName + '\n💰 Можно продать в Амбаре';
+                    if (result.incomeBonus > 0) {
+                      msg += '\n\n⬆️ Бонус грядки Ур. ' + result.plotLevel + ': +' + result.incomeBonus + '💰';
+                    }
+                    tg?.showAlert(msg);
+                  }
 
-  setTimeout(() => setHarvestingId(null), 1200);
-}}
-                  >
-                    Собрать
-                  </button>
+                  setTimeout(() => setHarvestingId(null), 1200);
+                }}
+              >
+                Собрать
+              </button>
                   <div className={'crop-expire' + (isUrgent(crop.expires_at) ? ' urgent' : '')}>
                     {isUrgent(crop.expires_at) ? '⚠️' : '🌾'} Осталось: {getExpireTime(crop.
  expires_at)}
@@ -344,19 +338,7 @@ function Farm({
         })}
       </div>
 
-      <h2>Инвентарь семян</h2>
-<p className="seeds-hint">👆 Тапни на пустую грядку, чтобы посадить</p>
-<div className="seeds-grid">
-  {seeds.map((seed) => (
-    <div key={seed.id} className={'seed-card ' + seed.rarity}>
-      <div className="seed-image">
-        <CropIcon name={seed.name} size={48} />
-      </div>
-      <div className="seed-name">{seed.name}</div>
-      <div className="seed-qty">x{seed.quantity}</div>
-    </div>
-  ))}
-</div>
+      
       {seedPickerFor !== null && (
         <div className="seed-picker-overlay" onClick={() => setSeedPickerFor(null)}>
           <div className="seed-picker-modal" onClick={(e) => e.stopPropagation()}>
