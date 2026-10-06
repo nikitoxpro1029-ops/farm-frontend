@@ -2412,4 +2412,297 @@ h2 {
   padding: 6px 12px;
   border-radius: 20px;
   box-shadow: 0 0 12px rgba(106, 76, 255, 0.4);
+}/* ============================================
+   🌱 ПУСТЫЕ ГРЯДКИ
+   ============================================ */
+
+.plot-empty {
+  background: #2d2d44;
+  border: 2px dashed #555;
+  border-radius: 16px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+  user-select: none;
+}
+
+.plot-empty:active {
+  transform: scale(0.97);
+  border-color: #4caf50;
+}
+
+.plot-plus {
+  font-size: 42px;
+  color: #4caf50;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.plot-hint {
+  font-size: 13px;
+  color: #888;
+}
+
+/* ============================================
+   🏷 БЕЙДЖ УРОВНЯ + КНОПКА ⬆️ НА ГРЯДКЕ
+   ============================================ */
+
+.crop-level-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.crop-level-badge {
+  background: linear-gradient(135deg, #6a4cff, #4a2cd6);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.crop-upgrade-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 0 #2e7d32;
+  transition: transform 0.05s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.crop-upgrade-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #2e7d32;
+}
+
+/* ============================================
+   🌾 МОДАЛКА ВЫБОРА СЕМЯН
+   ============================================ */
+
+.seed-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+.seed-picker-modal {
+  background: linear-gradient(180deg, #2d2d44 0%, #1f1f33 100%);
+  border-top: 3px solid #4caf50;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 20px 28px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 70vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+.seed-picker-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.seed-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.seed-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a2e;
+  border: 2px solid #444;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.05s ease, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.seed-picker-item:active {
+  transform: scale(0.98);
+  border-color: #4caf50;
+}
+
+.seed-picker-item.rare    { border-color: #3b82f6; }
+.seed-picker-item.epic    { border-color: #a855f7; }
+.seed-picker-item.legendary { border-color: #f59e0b; }
+.seed-picker-item.mythic  { border-color: #ef4444; }
+
+.seed-picker-item > span:last-child {
+  margin-left: auto;
+  color: #4caf50;
+  font-weight: 800;
+}
+
+.seed-picker-cancel {
+  width: 100%;
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ============================================
+   ⬆️ МОДАЛКА АПГРЕЙДА
+   ============================================ */
+
+.upgrade-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.upgrade-modal {
+  background: #2d2d44;
+  border: 2px solid #4caf50;
+  border-radius: 20px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  animation: popIn 0.3s ease;
+}
+
+.upgrade-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.upgrade-levels {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.upgrade-current {
+  color: #888;
+}.upgrade-arrow {
+  color: #4caf50;
+}
+
+.upgrade-next {
+  color: #4caf50;
+}
+
+.upgrade-bonuses {
+  background: #1a1a2e;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.upgrade-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ddd;
+  font-size: 14px;
+  padding: 6px 0;
+}
+
+.upgrade-row strong {
+  color: #4caf50;
+}
+
+.upgrade-cost {
+  font-size: 15px;
+  color: #ddd;
+  margin-bottom: 16px;
+}
+
+.upgrade-cost strong {
+  color: #f0c419;
+}
+
+.upgrade-max {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.upgrade-confirm-btn {
+  width: 100%;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #2e7d32;
+  margin-bottom: 8px;
+  transition: transform 0.05s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.upgrade-confirm-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2e7d32;
+}
+
+.upgrade-confirm-btn:disabled {
+  background: #555;
+  box-shadow: 0 4px 0 #333;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.upgrade-cancel-btn {
+  width: 100%;
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
 }

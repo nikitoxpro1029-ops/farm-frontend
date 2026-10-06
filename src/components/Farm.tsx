@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import CropIcon from './CropIcon';
+import PlotUpgradeModal from './PlotUpgradeModal';
 
 interface Crop {
   id: number;
@@ -44,11 +45,50 @@ function Farm({
   const [now, setNow] = useState(Date.now());
   const [harvestingId, setHarvestingId] = useState<number | null>(null);
   const [wateringId, setWateringId] = useState<number | null>(null);
+  const [plotLevels, setPlotLevels] = useState<Record<number, number>>({});
+  const [seedPickerFor, setSeedPickerFor] = useState<number | null>(null);
+  const [upgradeFor, setUpgradeFor] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+    const loadLevels = async () => {
+      try {
+        const initData = (window as any).Telegram?.WebApp?.initData || '';
+        const res = await fetch(import.meta.env.VITE_API_URL + '/api/farm/plot-levels', {
+          headers: { 'x-telegram-init-data': initData },
+        });
+        const data = await res.json();
+        setPlotLevels(data.levels || {});
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    loadLevels();
+  }, []);
+
+  const handleUpgrade = async (plotIndex: number) => {
+    const initData = (window as any).Telegram?.WebApp?.initData || '';
+    const res = await fetch(import.meta.env.VITE_API_URL + '/api/farm/upgrade-plot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-telegram-init-data': initData },
+      body: JSON.stringify({ plotIndex }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      (window as any).Telegram?.WebApp?.showAlert(data.error);
+      return;
+    }
+    setPlotLevels((prev) => ({ ...prev, [plotIndex]: data.newLevel }));
+    (window as any).Telegram?.WebApp?.showAlert('⬆️ Уровень ' + data.newLevel + '!');
+  };
+
+  const getBonuses = (level: number) => ({
+    time: Math.round((level - 1) * 1.5),
+    income: Math.round((level - 1) * 2),
+  });
 
   const getTimeLeft = (readyAt: string) => {
     const diff = new Date(readyAt).getTime() - now;
@@ -159,8 +199,17 @@ function Farm({
 
       <h2>Грядки</h2>
       <div className="crops-grid">
-        {crops.length === 0 && <p className="empty">Посадите семена, чтобы начать</p>}
-        {crops.map((crop) => (
+        {Array.from({ length: plotsInfo?.plots || 6 }).map((_, plotIndex) => {
+          const crop = crops.find((c) => (c as any).plot_index === plotIndex);
+          if (!crop) {
+            return (
+              <div key={plotIndex} className="plot-empty" onClick={() => setSeedPickerFor(plotIndex)}>
+                <div className="plot-plus">+</div>
+                <div className="plot-hint">Посадить</div>
+              </div>
+            );
+          }
+          return (
           <div
             key={crop.id}
             className={
@@ -186,6 +235,17 @@ function Farm({
               </div>
             </div>
             <div className="crop-name">{crop.name}</div>
+            <div className="crop-level-row">
+                <span className="crop-level-badge">
+                  Ур. {plotLevels[(crop as any).plot_index] || 1}
+                </span>
+                <button
+                  className="crop-upgrade-btn"
+                  onClick={() => setUpgradeFor((crop as any).plot_index)}
+                >
+                  ⬆️
+                </button>
+              </div>
 
             {!isReady(crop.ready_at) && (
               <>
@@ -257,7 +317,8 @@ function Farm({
               )}
             </div>
           </div>
-        ))}
+        );
+        })}
       </div>
 
       <h2>Инвентарь семян</h2>
@@ -272,7 +333,20 @@ function Farm({
             <button className="plant-btn" onClick={() => onPlant(seed.seed_type_id)}>Посадить</button>
           </div>
         ))}
-      </div>
+      </div>{upgradeFor !== null && (
+        <PlotUpgradeModal
+          plotIndex={upgradeFor}
+          currentLevel={plotLevels[upgradeFor] || 1}
+          currentBonuses={getBonuses(plotLevels[upgradeFor] || 1)}
+          nextBonuses={getBonuses((plotLevels[upgradeFor] || 1) + 1)}
+          cost={{ coins: 500, crystals: 0 }}
+          balance={0}
+          crystals={0}
+          onUpgrade={handleUpgrade}
+          onClose={() => setUpgradeFor(null)}
+        />
+      )}
+      
     </div>
   );
 }
