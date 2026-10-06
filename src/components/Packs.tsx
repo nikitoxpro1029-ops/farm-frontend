@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { getSeedIcon } from '../seedIcons';
 import { playSound, playRouletteSpin } from '../Sounds';
 import CropIcon from './CropIcon';
 
@@ -191,7 +190,7 @@ function Packs({ onOpen }: PacksProps) {
       {result && (
         <div className="pack-result-overlay" onClick={closeResult}>
           <div className={'pack-result ' + result.rarity}>
-            <div className="result-image">{getSeedIcon(result.name)}</div>
+            <div className="result-image"><CropIcon name={result.name} size={80} /></div>
             <h3>Вы получили:</h3>
             <p className="result-name">{result.name}</p>
             <p className="result-rarity">{result.rarity}</p>
