@@ -42,11 +42,13 @@ function Packs({ onOpen }: PacksProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const tg = (window as any).Telegram?.WebApp;
 
-  const packs: Pack[] = [
-    { id: 1, name: 'Базовый пак', price: 30, description: 'Обычные семена', icon: '📦', rarity: 'common' },
-    { id: 2, name: 'Редкий пак', price: 150, description: 'Шанс на редкие', icon: '🎁', rarity: 'rare' },
-    { id: 3, name: 'Легендарный пак', price: 500, description: 'Эпик и мифик', icon: '💎', rarity: 'legendary' },
-  ];
+ const packs: Pack[] = [
+  { id: 1, name: 'Базовый пак', price: 30, description: 'Обычные семена', icon: '📦', rarity: 'common' },
+  { id: 2, name: 'Редкий пак', price: 150, description: 'Шанс на редкие', icon: '🎁', rarity: 'rare' },
+  { id: 3, name: 'Легендарный пак', price: 1000, description: 'Эпик и мифик', icon: '💎', rarity: 'legendary' },
+  { id: 4, name: 'Мифический пак', price: 5000, description: 'Шанс на мифик', icon: '🐉', rarity: 'mythic' },
+  { id: 5, name: 'Премиум пак', price: 10000, description: 'Эксклюзивные семена', icon: '👑', rarity: 'mythic' },
+];
 
   const allSeeds: RouletteItem[] = [
     { name: 'Пшеница', rarity: 'common' },
