@@ -179,7 +179,7 @@ function Packs({ onOpen }: PacksProps) {
             >
               {rouletteItems.map((item, i) => (
                 <div key={i} className={'roulette-item ' + item.rarity}>
-                  <div className="roulette-icon">{getSeedIcon(item.name)}</div>
+                 
                   <div className="roulette-icon"><CropIcon name={item.name} size={40} /></div>
                 </div>
               ))}
