@@ -24,7 +24,7 @@ interface Seed {
 interface FarmProps {
   crops: Crop[];
   seeds: Seed[];
-  onPlant: (seedTypeId: number) => void;
+ onPlant: (seedTypeId: number, plotIndex?: number) => void;
   onHarvest: (cropId: number) => void;
   onWater: (cropId: number) => void;
   onFertilize: (cropId: number) => void;

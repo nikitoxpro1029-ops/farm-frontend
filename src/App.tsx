@@ -116,12 +116,12 @@ const loadBadge = async () => {
     }
   };
 
-  const plantSeed = async (seedTypeId: number) => {
+  const plantSeed = async (seedTypeId: number, plotIndex?: number) => {
     try {
       const initData = tg?.initData || '';
       await axios.post(
         API_URL + '/api/farm/plant',
-        { seedTypeId },
+        { seedTypeId, plotIndex },
         { headers: { 'x-telegram-init-data': initData } }
       );
       loadState();
