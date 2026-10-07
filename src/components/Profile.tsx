@@ -26,11 +26,12 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   const [selected, setSelected] = useState<any>(null);
   const tg = (window as any).Telegram?.WebApp;
   const [myLoadout, setMyLoadout] = useState<{
-  frame_icon: string | null;
-  frame_rarity: string | null;
-  avatar_icon: string | null;
-  title_icon: string | null;
-}>({ frame_icon: null, frame_rarity: null, avatar_icon: null, title_icon: null });
+    frame_icon: string | null;
+    frame_bg: string | null;
+    frame_rarity: string | null;
+    avatar_icon: string | null;
+    title_icon: string | null;
+  }>({ frame_icon: null, frame_bg: null, frame_rarity: null, avatar_icon: null, title_icon: null });
 
   useEffect(() => {
     load();
@@ -54,12 +55,13 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
       const frameItem = getItem(equipped.frame);
       const avatarItem = getItem(equipped.avatar);
       const titleItem = getItem(equipped.title);
-      setMyLoadout({
-        frame_icon: frameItem?.icon || null,
-        frame_rarity: frameItem?.rarity || null,
-        avatar_icon: avatarItem?.icon || null,
-        title_icon: titleItem?.icon || null,
-      });
+     setMyLoadout({
+  frame_icon: frameItem?.icon || null,
+  frame_bg: frameItem?.bg_image || null,
+  frame_rarity: frameItem?.rarity || null,
+  avatar_icon: avatarItem?.icon || null,
+  title_icon: titleItem?.icon || null,
+});
     } catch (error) {
       console.error(error);
     } finally {
@@ -76,30 +78,13 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   return (
     <div className="profile">
       <div className={'profile-header' + (myLoadout.frame_rarity ? ' frame-' + myLoadout.frame_rarity : '')}>
-  {myLoadout.frame_icon && (
-  <div className="frame-scatter">
-    {[
-      { top: 8,   left: 8 },   { top: 6,   left: 22 },  { top: 10,  left: 38 },
-      { top: 5,   left: 55 },  { top: 9,   left: 70 },  { top: 7,   left: 85 },
-      { top: 50,  left: 4 },   { top: 50,  left: 92 },
-      { top: 88,  left: 8 },   { top: 90,  left: 25 },  { top: 86,  left: 42 },
-      { top: 92,  left: 60 },  { top: 87,  left: 76 },  { top: 89,  left: 90 },
-    ].map((pos, i) => (
-      <span
-        key={i}
-        className="frame-item"
-        style={{
-          top: pos.top + '%',
-          left: pos.left + '%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: (12 + (i % 3) * 3) + 'px',
-        }}
-      >
-        {myLoadout.frame_icon}
-      </span>
-    ))}
-  </div>
-)}
+  {myLoadout.frame_bg && (
+            <img 
+              src={'/frames/' + myLoadout.frame_bg} 
+              className="profile-bg-image" 
+              alt="" 
+            />
+          )}
           <div className="profile-avatar">
             {user.first_name ? user.first_name[0].toUpperCase() : '?'}
           </div>
