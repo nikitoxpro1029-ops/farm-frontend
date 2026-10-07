@@ -310,7 +310,7 @@ return res.data;
         {activeTab === 'packs' && <Packs onOpen={loadState} />}
         {activeTab === 'barn' && <Barn onSell={loadState} />}
         {activeTab === 'game' && <MemoryGame onFinish={loadState} />}
-        {activeTab === 'profile' && <Profile />}
+        {activeTab === 'profile' && <Profile crystals={user?.crystals || 0} onUpdate={loadState} />}
       </main>
       <TutorialOverlay
         key={tutorialKey}
