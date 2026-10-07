@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Coin from './Coin';
 import CropIcon from './CropIcon';
+import Cosmetics from './Cosmetics';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,10 +14,15 @@ interface ProfileData {
   catalog: any[];
 }
 
-function Profile() {
+interface ProfileProps {
+  crystals: number;
+  onUpdate: () => void;
+}
+function Profile({ crystals, onUpdate }: ProfileProps) {
+
   const [data, setData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [subTab, setSubTab] = useState<'stats' | 'top' | 'catalog'>('stats');
+  const [subTab, setSubTab] = useState<'stats' | 'top' | 'cosmetics' | 'catalog'>('stats');
   const [selected, setSelected] = useState<any>(null);
   const tg = (window as any).Telegram?.WebApp;
 
@@ -70,6 +76,7 @@ function Profile() {
       <div className="subtabs">
         <button className={subTab === 'stats' ? 'active' : ''} onClick={() => setSubTab('stats')}>📊 Стат</button>
         <button className={subTab === 'top' ? 'active' : ''} onClick={() => setSubTab('top')}>🏆 Топ</button>
+        <button className={subTab === 'cosmetics' ? 'active' : ''} onClick={() => setSubTab('cosmetics')}>🎨 Косметика</button>
         <button className={subTab === 'catalog' ? 'active' : ''} onClick={() => setSubTab('catalog')}>📖 Справочник</button>
       </div>
 
@@ -130,6 +137,7 @@ function Profile() {
         </div>
       )}
 
+      {subTab === 'cosmetics' && <Cosmetics crystals={crystals} onUpdate={onUpdate} />}
       {subTab === 'catalog' && (
         <>
           <div className="catalog-progress">
