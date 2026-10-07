@@ -128,7 +128,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
         </div>
 
         <div className="tutorial-header">
-          <div className="tutorial-avatar">👴</div>
+          <div className="tutorial-avatar">🐉</div>
           <div className="tutorial-name">Дракоша</div>
         </div>
 
