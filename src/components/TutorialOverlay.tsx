@@ -111,7 +111,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
   if (collapsed || shouldAutoCollapse) {
     return (
       <div className="tutorial-mini" onClick={() => setCollapsed(false)}>
-        🐉 Подсказка Дракоша
+        🐉 Подсказка Дракоши
       </div>
     );
   }
