@@ -2871,4 +2871,28 @@ h2 {
   background: #1a1a2e;
   color: #4caf50;
   cursor: default;
+}/* Рамка вокруг аватарки */
+.profile-avatar-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-avatar-frame {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 80px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Титул */
+.profile-title {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #f0c419;
+  font-weight: 600;
+  text-align: center;
 }

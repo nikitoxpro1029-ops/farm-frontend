@@ -25,11 +25,11 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   const [subTab, setSubTab] = useState<'stats' | 'top' | 'cosmetics' | 'catalog'>('stats');
   const [selected, setSelected] = useState<any>(null);
   const tg = (window as any).Telegram?.WebApp;
+  const [myLoadout, setMyLoadout] = useState<{ frame_icon: string | null; avatar_icon: string | null; title_icon: string | null }>({ frame_icon: null, avatar_icon: null, title_icon: null });
 
   useEffect(() => {
     load();
   }, []);
-
   const load = async () => {
     try {
       const initData = tg?.initData || '';
@@ -37,6 +37,21 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
         headers: { 'x-telegram-init-data': initData },
       });
       setData(res.data);
+      const cosRes = await axios.get(API_URL + '/api/cosmetics/my', {
+        headers: { 'x-telegram-init-data': initData },
+      });
+      const equipped = cosRes.data.equipped || {};
+      const items = cosRes.data.items || [];
+      const getIcon = (id: number | null) => {
+        if (!id) return null;
+        const found = items.find((it: any) => it.cosmetic_id === id);
+        return found ? found.icon : null;
+      };
+      setMyLoadout({
+        frame_icon: getIcon(equipped.frame),
+        avatar_icon: getIcon(equipped.avatar),
+        title_icon: getIcon(equipped.title),
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -53,11 +68,19 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   return (
     <div className="profile">
       <div className="profile-header">
-        <div className="profile-avatar">
-          {user.first_name ? user.first_name[0].toUpperCase() : '?'}
-        </div>
+        <div className="profile-avatar-wrap">
+  <div className="profile-avatar">
+    {user.first_name ? user.first_name[0].toUpperCase() : '?'}
+  </div>
+  {myLoadout.frame_icon && (
+    <div className="profile-avatar-frame">{myLoadout.frame_icon}</div>
+  )}
+</div>
         <div className="profile-name">{user.first_name || 'Игрок'}</div>
         {user.username && <div className="profile-username">@{user.username}</div>}
+        {myLoadout.title_icon && (
+  <div className="profile-title">{myLoadout.title_icon} Титул</div>
+)}
         <div className="profile-balance">
           <Coin size={16} /> {user.balance}
         </div>
