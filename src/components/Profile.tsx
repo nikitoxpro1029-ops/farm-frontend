@@ -25,7 +25,12 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   const [subTab, setSubTab] = useState<'stats' | 'top' | 'cosmetics' | 'catalog'>('stats');
   const [selected, setSelected] = useState<any>(null);
   const tg = (window as any).Telegram?.WebApp;
-  const [myLoadout, setMyLoadout] = useState<{ frame_icon: string | null; avatar_icon: string | null; title_icon: string | null }>({ frame_icon: null, avatar_icon: null, title_icon: null });
+  const [myLoadout, setMyLoadout] = useState<{
+  frame_icon: string | null;
+  frame_rarity: string | null;
+  avatar_icon: string | null;
+  title_icon: string | null;
+}>({ frame_icon: null, frame_rarity: null, avatar_icon: null, title_icon: null });
 
   useEffect(() => {
     load();
@@ -42,15 +47,18 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
       });
       const equipped = cosRes.data.equipped || {};
       const items = cosRes.data.items || [];
-      const getIcon = (id: number | null) => {
+      const getItem = (id: number | null) => {
         if (!id) return null;
-        const found = items.find((it: any) => it.cosmetic_id === id);
-        return found ? found.icon : null;
+        return items.find((it: any) => it.cosmetic_id === id) || null;
       };
+      const frameItem = getItem(equipped.frame);
+      const avatarItem = getItem(equipped.avatar);
+      const titleItem = getItem(equipped.title);
       setMyLoadout({
-        frame_icon: getIcon(equipped.frame),
-        avatar_icon: getIcon(equipped.avatar),
-        title_icon: getIcon(equipped.title),
+        frame_icon: frameItem?.icon || null,
+        frame_rarity: frameItem?.rarity || null,
+        avatar_icon: avatarItem?.icon || null,
+        title_icon: titleItem?.icon || null,
       });
     } catch (error) {
       console.error(error);
@@ -67,24 +75,21 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
 
   return (
     <div className="profile">
-      <div className="profile-header">
-        <div className="profile-avatar-wrap">
-  <div className="profile-avatar">
-    {user.first_name ? user.first_name[0].toUpperCase() : '?'}
-  </div>
-  {myLoadout.frame_icon && (
-    <div className="profile-avatar-frame">{myLoadout.frame_icon}</div>
-  )}
-</div>
-        <div className="profile-name">{user.first_name || 'Игрок'}</div>
-        {user.username && <div className="profile-username">@{user.username}</div>}
-        {myLoadout.title_icon && (
-  <div className="profile-title">{myLoadout.title_icon} Титул</div>
-)}
-        <div className="profile-balance">
-          <Coin size={16} /> {user.balance}
-        </div>
-      </div>
+      <div className={'profile-header' + (myLoadout.frame_rarity ? ' frame-' + myLoadout.frame_rarity : '')}>
+          {myLoadout.frame_icon && (
+            <div className="profile-frame-badge">{myLoadout.frame_icon}</div>
+          )}
+          <div className="profile-avatar">
+            {user.first_name ? user.first_name[0].toUpperCase() : '?'}
+          </div>
+          <div className="profile-name">{user.first_name || 'Игрок'}</div>
+          {user.username && <div className="profile-username">@{user.username}</div>}
+          {myLoadout.title_icon && (
+            <div className="profile-title">{myLoadout.title_icon} Титул</div>
+          )}
+          <div className="profile-balance">
+            <Coin size={16} /> {user.balance}
+          </div>
 
       <div className="profile-level">
         <div className="level-badge-lg">Уровень {user.level || 1}</div>
@@ -95,7 +100,7 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
           {user.xp || 0} / {xpForNext} XP
         </div>
       </div>
-
+      </div>
       <div className="subtabs">
         <button className={subTab === 'stats' ? 'active' : ''} onClick={() => setSubTab('stats')}>📊 Стат</button>
         <button className={subTab === 'top' ? 'active' : ''} onClick={() => setSubTab('top')}>🏆 Топ</button>
