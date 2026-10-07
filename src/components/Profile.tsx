@@ -76,9 +76,14 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   return (
     <div className="profile">
       <div className={'profile-header' + (myLoadout.frame_rarity ? ' frame-' + myLoadout.frame_rarity : '')}>
-          {myLoadout.frame_icon && (
-            <div className="profile-frame-badge">{myLoadout.frame_icon}</div>
-          )}
+  {myLoadout.frame_icon && (
+    <>
+      <div className="frame-row top">{Array(12).fill(myLoadout.frame_icon).join('')}</div>
+      <div className="frame-row bottom">{Array(12).fill(myLoadout.frame_icon).join('')}</div>
+      <div className="frame-col left">{Array(5).fill(myLoadout.frame_icon).join('\n')}</div>
+      <div className="frame-col right">{Array(5).fill(myLoadout.frame_icon).join('\n')}</div>
+    </>
+  )}
           <div className="profile-avatar">
             {user.first_name ? user.first_name[0].toUpperCase() : '?'}
           </div>
