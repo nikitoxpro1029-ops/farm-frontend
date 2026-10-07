@@ -96,17 +96,19 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
           <div className="profile-balance">
             <Coin size={16} /> {user.balance}
           </div>
+        </div>
 
-      <div className="profile-level">
-        <div className="level-badge-lg">Уровень {user.level || 1}</div>
-        <div className="xp-bar">
-          <div className="xp-bar-fill" style={{ width: xpPercent + '%' }} />
+        <div className="profile-level">
+          <div className="level-badge-lg">Уровень {user.level || 1}</div>
+          <div className="xp-bar">
+            <div className="xp-bar-fill" style={{ width: xpPercent + '%' }} />
+          </div>
+          <div className="xp-text">
+            {user.xp || 0} / {xpForNext} XP
+          </div>
         </div>
-        <div className="xp-text">
-          {user.xp || 0} / {xpForNext} XP
-        </div>
-      </div>
-      </div>
+
+        
       <div className="subtabs">
         <button className={subTab === 'stats' ? 'active' : ''} onClick={() => setSubTab('stats')}>📊 Стат</button>
         <button className={subTab === 'top' ? 'active' : ''} onClick={() => setSubTab('top')}>🏆 Топ</button>
