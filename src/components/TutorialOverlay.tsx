@@ -44,7 +44,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
           setState(res.data);
           tg?.HapticFeedback?.impactOccurred('light');
           if (res.data.completed) {
-            tg?.showAlert('🎉 Обучение пройдено! Дед Мазай доволен.');
+            tg?.showAlert('🎉 Обучение пройдено! Дракоша доволен.');
             onComplete();
           } else {
             onAdvance();
@@ -81,7 +81,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
       );
       tg?.HapticFeedback?.impactOccurred('light');
       if (res.data.completed) {
-        tg?.showAlert('🎉 Обучение пройдено! Дед Мазай доволен.');
+        tg?.showAlert('🎉 Обучение пройдено! Дракоша доволен.');
         onComplete();
       } else {
         setState(res.data);
@@ -102,7 +102,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
 
   if (loading || !state) return null;
   if (state.skipped || state.completed) return null;
-  if (!state.dialog) return null;
+  if (!state.dialog) return null; 
 
  // Автосворачивание: пока игрок на вкладке Паки и шаг — action,
   // не разворачиваем модалку, чтобы не перебивать рулетку.
@@ -111,7 +111,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
   if (collapsed || shouldAutoCollapse) {
     return (
       <div className="tutorial-mini" onClick={() => setCollapsed(false)}>
-        👴 Подсказка Деда
+        🐉 Подсказка Деда
       </div>
     );
   }
@@ -129,7 +129,7 @@ function TutorialOverlay({ onAdvance, onComplete, activeTab }: TutorialOverlayPr
 
         <div className="tutorial-header">
           <div className="tutorial-avatar">👴</div>
-          <div className="tutorial-name">Дед Мазай</div>
+          <div className="tutorial-name">Дракоша</div>
         </div>
 
         <div className="tutorial-dialog">{state.dialog}</div>
