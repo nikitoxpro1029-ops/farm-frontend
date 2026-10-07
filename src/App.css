@@ -2898,50 +2898,21 @@ h2 {
   color: #f0c419;
   font-weight: 600;
   text-align: center;
-}/* === ЭМОДЗИ-РАМКА ВОКРУГ КАРТОЧКИ === */
-
-.frame-row,
-.frame-col {
+}
+/* Эмодзи-рамка: разбросанные иконки */
+.frame-scatter {
   position: absolute;
-  font-size: 16px;
-  line-height: 1;
+  inset: 0;
   pointer-events: none;
   z-index: 5;
-  letter-spacing: -3px;
+}
+
+.frame-item {
+  position: absolute;
+  opacity: 0.85;
+  line-height: 1;
   user-select: none;
-  opacity: 0.9;
-}
-
-.frame-row.top {
-  top: -10px;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-
-.frame-row.bottom {
-  bottom: -10px;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-
-.frame-col.left {
-  top: 50%;
-  left: -6px;
-  transform: translateY(-50%);
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  line-height: 0.9;
-}
-
-.frame-col.right {
-  top: 50%;
-  right: -6px;
-  transform: translateY(-50%);
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  line-height: 0.9;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.4));
 }
 
 /* Цвета обводки */
