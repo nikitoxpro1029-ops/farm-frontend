@@ -28,10 +28,12 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   const [myLoadout, setMyLoadout] = useState<{
     frame_icon: string | null;
     frame_bg: string | null;
+    frame_bg_sq: string | null;
+    frame_bg_wide: string | null;
     frame_rarity: string | null;
     avatar_icon: string | null;
     title_icon: string | null;
-  }>({ frame_icon: null, frame_bg: null, frame_rarity: null, avatar_icon: null, title_icon: null });
+  }>({ frame_icon: null, frame_bg: null, frame_bg_sq: null, frame_bg_wide: null, frame_rarity: null, avatar_icon: null, title_icon: null });
 
   useEffect(() => {
     load();
@@ -56,12 +58,14 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
       const avatarItem = getItem(equipped.avatar);
       const titleItem = getItem(equipped.title);
      setMyLoadout({
-  frame_icon: frameItem?.icon || null,
-  frame_bg: frameItem?.bg_image || null,
-  frame_rarity: frameItem?.rarity || null,
-  avatar_icon: avatarItem?.icon || null,
-  title_icon: titleItem?.icon || null,
-});
+        frame_icon: frameItem?.icon || null,
+        frame_bg: frameItem?.bg_image || null,
+        frame_bg_sq: frameItem?.bg_image_sq || null,
+        frame_bg_wide: frameItem?.bg_image_wide || null,
+        frame_rarity: frameItem?.rarity || null,
+        avatar_icon: avatarItem?.icon || null,
+        title_icon: titleItem?.icon || null,
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -78,13 +82,9 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
   return (
     <div className="profile">
       <div className={'profile-header' + (myLoadout.frame_rarity ? ' frame-' + myLoadout.frame_rarity : '')}>
-  {myLoadout.frame_bg && (
-            <img 
-              src={'/frames/' + myLoadout.frame_bg} 
-              className="profile-bg-image" 
-              alt="" 
-            />
-          )}
+  {myLoadout.frame_bg_sq && (
+  <img src={'/frames/sq/' + myLoadout.frame_bg_sq} className="profile-bg-image" alt="" />
+)}
           <div className="profile-avatar">
             {user.first_name ? user.first_name[0].toUpperCase() : '?'}
           </div>
@@ -160,15 +160,15 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
             return (
               <div 
                 key={player.telegram_id} 
-                className={'leaderboard-row' + (rank <= 3 ? ' top-' + rank : '') + (player.frame_bg ? ' has-frame' : '')}
+               className={'leaderboard-row' + (rank <= 3 ? ' top-' + rank : '') + (player.frame_bg_wide ? ' has-frame' : '')}
               >
-                {player.frame_bg && (
-                  <img 
-                    src={'/frames/' + player.frame_bg} 
-                    className="leaderboard-frame-bg" 
-                    alt="" 
-                  />
-                )}
+                {player.frame_bg_wide && (
+  <img
+    src={'/frames/wide/' + player.frame_bg_wide}
+    className="leaderboard-frame-bg"
+    alt=""
+  />
+)}
                 <div className="rank">{medal} <span className="medal">{medal}</span></div>
                 <div className="player-info">
                   <div className="player-name">
