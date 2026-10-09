@@ -154,11 +154,22 @@ function Profile({ crystals, onUpdate }: ProfileProps) {
       {subTab === 'top' && (
         <div className="leaderboard-list">
           {leaderboard.map((player, i) => {
-            const rank = i + 1;const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null;
+            const rank = i + 1;
+            const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
             const isMe = player.telegram_id === tg?.initDataUnsafe?.user?.id;
             return (
-              <div key={player.telegram_id} className={'leaderboard-row' + (rank <= 3 ? ' top-' + rank : '') + (isMe ? ' me' : '')}>
-                <div className="rank">{medal ? <span className="medal">{medal}</span> : '#' + rank}</div>
+              <div 
+                key={player.telegram_id} 
+                className={'leaderboard-row' + (rank <= 3 ? ' top-' + rank : '') + (player.frame_bg ? ' has-frame' : '')}
+              >
+                {player.frame_bg && (
+                  <img 
+                    src={'/frames/' + player.frame_bg} 
+                    className="leaderboard-frame-bg" 
+                    alt="" 
+                  />
+                )}
+                <div className="rank">{medal} <span className="medal">{medal}</span></div>
                 <div className="player-info">
                   <div className="player-name">
                     {player.first_name || 'Игрок'}

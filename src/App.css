@@ -2945,3 +2945,25 @@ h2 {
   pointer-events: none;
   border-radius: 16px;
 }
+/* Рамка в лидерборде */
+.leaderboard-row {
+  position: relative;
+  overflow: hidden;
+}
+
+.leaderboard-frame-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0.55;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.leaderboard-row > *:not(.leaderboard-frame-bg) {
+  position: relative;
+  z-index: 1;
+}
