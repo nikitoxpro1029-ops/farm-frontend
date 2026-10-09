@@ -2920,11 +2920,8 @@ h2 {
 
 .profile-header {
   position: relative;
-  overflow: hidden;
   text-align: center;
-  padding: 34px 24px;
-  background: linear-gradient(135deg, #2d2d44, #3a3a55);
-  border-radius: 16px;
+  padding: 40px 24px;
   margin-bottom: 12px;
 }
 .profile-header > *:not(.profile-bg-image) {
@@ -2935,15 +2932,11 @@ h2 {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill;
-  opacity: 0.9;
+  object-fit: contain;
   z-index: 0;
   pointer-events: none;
-  border-radius: 16px;
 }
 /* Рамка в лидерборде */
 .leaderboard-row {
